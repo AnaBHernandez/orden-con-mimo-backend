@@ -2,12 +2,18 @@ package com.ordenconmimo.usuario.modelos;
 
 import java.time.LocalDateTime;
 
+import com.ordenconmimo.espacio.modelos.Espacio;
+
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Tarea {
@@ -21,6 +27,10 @@ public class Tarea {
     private LocalDateTime fechaCreacion;    
     private LocalDateTime fechaLimite;    
     private boolean completada;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "espacio_id")
+    private Espacio espacio;
     
     @Enumerated(EnumType.STRING)
     private CategoriaMIMO categoria;
@@ -92,12 +102,27 @@ public class Tarea {
     public void setCategoria(CategoriaMIMO categoria) {
         this.categoria = categoria;
     }
+
+    public Espacio getEspacio() {
+        return espacio;
+    }
+    public void setEspacio(Espacio espacio) {
+        this.espacio = espacio;
+    }
     
     @Override
     public String toString() {
-        return "Tarea [id=" + id + ", nombre=" + nombre + ", categoria=" + categoria + 
-        ", completada=" + completada + "]";
-    }
+    return "Tarea{" +
+            "id=" + id +
+            ", nombre='" + nombre + '\'' +
+            ", descripcion='" + descripcion + '\'' +
+            ", fechaCreacion=" + fechaCreacion +
+            ", fechaLimite=" + fechaLimite +
+            ", completada=" + completada +
+            ", categoria=" + categoria +
+            ", espacio=" + (espacio != null ? espacio.getNombre() : "ninguno") +
+            '}';
+}
     
     @Override
     public int hashCode() {

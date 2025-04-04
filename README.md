@@ -20,6 +20,3 @@ Aplicación de organización personal que implementa el método MIMO (Mírate, I
 - Gestión de espacios físicos
 - Interfaz de usuario intuitiva con Thymeleaf
 
-## Documentación
-
-La documentación completa del proyecto se encuentra en la [carpeta docs](./docs/).

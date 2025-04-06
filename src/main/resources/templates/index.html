@@ -1,9 +1,87 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Orden con MIMO</title>
+    <style>
+         :root {
+            --mimo-primary: #98D8C8;    /* Verde menta */
+            --mimo-accent: #F5E6A8;     /* Amarillo suave */
+            --mimo-secondary: #89CFF0;  /* Azul bebé */
+            --mimo-warm: #FFFFFF;       /* Blanco */
+            --mimo-text: #2A4747;       /* Verde oscuro para texto */
+        }
+
+        .navbar {
+            background: linear-gradient(45deg, var(--mimo-primary), var(--mimo-secondary));
+        }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--mimo-warm);
+            color: var(--mimo-text);
+        }
+
+        .navbar {
+            background-color: var(--mimo-primary);
+            padding: 1rem;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .mimo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .mimo-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .mimo-card h2 {
+            color: var(--mimo-primary);
+            margin-top: 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Bienvenido a Orden con MIMO</h1>
+    <nav class="navbar">
+        <h1>Orden con MIMO</h1>
+    </nav>
+
+    <div class="container">
+        <main class="mimo-grid">
+            <div class="mimo-card">
+                <h2>Mírate</h2>
+                <p>Conoce tus necesidades y hábitos</p>
+            </div>
+            <div class="mimo-card">
+                <h2>Imagina</h2>
+                <p>Visualiza tu espacio ideal</p>
+            </div>
+            <div class="mimo-card">
+                <h2>Muévete</h2>
+                <p>Actúa para lograr el cambio</p>
+            </div>
+            <div class="mimo-card">
+                <h2>Ordena</h2>
+                <p>Mantén tu espacio organizado</p>
+            </div>
+        </main>
+    </div>
 </body>
 </html>

@@ -31,6 +31,10 @@ public class Tarea {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "espacio_id")
     private Espacio espacio;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
     
     @Enumerated(EnumType.STRING)
     private CategoriaMIMO categoria;
@@ -109,6 +113,14 @@ public class Tarea {
     public void setEspacio(Espacio espacio) {
         this.espacio = espacio;
     }
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
     
     @Override
     public String toString() {

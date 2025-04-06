@@ -23,18 +23,14 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Tarea> tareas = new ArrayList<>();
     
-    // Constructor por defecto (necesario para JPA)
     public Usuario() {
     }
     
-    // Constructor con nombre y email
     public Usuario(String nombre, String email) {
         this.nombre = nombre;
         this.email = email;
     }
-    
-    // Getters y setters
-    
+        
     public Long getId() {
         return id;
     }
@@ -65,9 +61,8 @@ public class Usuario {
     
     public List<Tarea> getTareas() {
         return tareas;
-    }
-    
-    // Métodos helper para gestionar relaciones
+    }   
+
     
     public Espacio crearEspacio(String nombre, String descripcion) {
         Espacio nuevoEspacio = new Espacio(nombre, descripcion);
@@ -80,8 +75,7 @@ public class Usuario {
         espacio.setUsuario(this);
     }
     
-    // Equals y hashCode basados en id
-    
+        
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

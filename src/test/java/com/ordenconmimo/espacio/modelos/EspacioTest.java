@@ -51,27 +51,19 @@ public void testEqualsHashCode() {
     Espacio espacio1 = new Espacio("Espacio 1", "Descripción 1");
     Espacio espacio2 = new Espacio("Espacio 2", "Descripción 2");
     
-    // Con IDs nulos, comparamos solo por referencia, no por contenido
-    // Así que dos objetos distintos nunca son iguales si tienen IDs nulos
     assertNotEquals(espacio1, espacio2);
     
-    // Pero un objeto siempre es igual a sí mismo
     assertEquals(espacio1, espacio1);
     
-    // Asignar el mismo ID a ambos espacios
     espacio1.setId(1L);
     espacio2.setId(1L);
     
-    // Ahora deberían ser iguales porque tienen el mismo ID
-    assertEquals(espacio1, espacio2);
+    assertEquals(espacio1, espacio2);    
+  
+    espacio2.setId(2L);    
     
-    // Asignar IDs diferentes
-    espacio2.setId(2L);
+    assertNotEquals(espacio1, espacio2);    
     
-    // Ahora son diferentes de nuevo
-    assertNotEquals(espacio1, espacio2);
-    
-    // Validar contra null y otros tipos
     assertNotEquals(null, espacio1);
     assertNotEquals(espacio1, new Object());
 }

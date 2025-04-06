@@ -29,19 +29,15 @@ public class Espacio {
     @OneToMany(mappedBy = "espacio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Tarea> tareas = new ArrayList<>();
     
-    // Constructor por defecto (necesario para JPA)
     public Espacio() {
         this.fechaCreacion = LocalDateTime.now();
     }
     
-    // Constructor con nombre y descripción
     public Espacio(String nombre, String descripcion) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.fechaCreacion = LocalDateTime.now();
     }
-    
-    // Getters y setters
     
     public Long getId() {
         return id;
@@ -87,8 +83,6 @@ public class Espacio {
         return tareas;
     }
     
-    // Métodos helper para gestionar la relación bidireccional
-    
     public void addTarea(Tarea tarea) {
         tareas.add(tarea);
         tarea.setEspacio(this);
@@ -98,32 +92,26 @@ public class Espacio {
         tareas.remove(tarea);
         tarea.setEspacio(null);
     }
-    
-    // Equals y hashCode basados en id
-    
+        
     @Override
     public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Espacio espacio = (Espacio) o;
     
-    // Si ambos IDs son nulos, comparar por nombre y descripción
     if (id == null && espacio.id == null) {
         return Objects.equals(nombre, espacio.nombre) &&
                Objects.equals(descripcion, espacio.descripcion);
     }
     
-    // Si solo uno de los IDs es nulo, los objetos son diferentes
     if (id == null || espacio.id == null) {
         return false;
     }
     
-    // Si ambos tienen ID, comparar por ID
     return Objects.equals(id, espacio.id);
 }
     @Override
     public int hashCode() {
-    // Si id es nulo, usar nombre y descripción para hashCode
     return id != null ? Objects.hash(id) : Objects.hash(nombre, descripcion);
 }
     

@@ -13,9 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Implementación del servicio que gestiona las operaciones de espacios.
- */
 @Service
 public class EspacioServiceImpl implements EspacioService {
     
@@ -31,7 +28,6 @@ public class EspacioServiceImpl implements EspacioService {
     @Override
     @Transactional
     public Espacio guardarEspacio(Espacio espacio) {
-        // Validaciones de negocio
         if (espacio.getNombre() == null || espacio.getNombre().trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre del espacio no puede estar vacío");
         }
@@ -40,8 +36,7 @@ public class EspacioServiceImpl implements EspacioService {
             throw new IllegalArgumentException("El usuario es obligatorio para crear un espacio");
         }
         
-        // Verificar si ya existe un espacio con el mismo nombre para el usuario
-        if (espacio.getId() == null) { // Solo para nuevos espacios
+        if (espacio.getId() == null) {
             Optional<Espacio> espacioExistente = 
                 espacioRepository.findByNombreAndUsuario(espacio.getNombre(), espacio.getUsuario());
             
@@ -94,7 +89,6 @@ public class EspacioServiceImpl implements EspacioService {
         if (espacioOpt.isPresent()) {
             Espacio espacio = espacioOpt.get();
             
-            // Si la tarea ya tiene un ID, primero la recuperamos
             if (tarea.getId() != null) {
                 Optional<Tarea> tareaExistente = tareaRepository.findById(tarea.getId());
                 if (tareaExistente.isPresent()) {
@@ -102,7 +96,6 @@ public class EspacioServiceImpl implements EspacioService {
                 }
             }
             
-            // Asegurarse que la tarea tenga el mismo usuario que el espacio
             if (tarea.getUsuario() == null) {
                 tarea.setUsuario(espacio.getUsuario());
             } else if (!tarea.getUsuario().equals(espacio.getUsuario())) {
@@ -133,7 +126,6 @@ public class EspacioServiceImpl implements EspacioService {
         
         Tarea tarea = tareaOpt.get();
         
-        // Verificar que la tarea pertenezca al espacio
         if (tarea.getEspacio() == null || !tarea.getEspacio().getId().equals(espacioId)) {
             throw new IllegalArgumentException("La tarea no pertenece al espacio especificado");
         }

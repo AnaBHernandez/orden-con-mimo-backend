@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,15 +58,10 @@ public class EspacioServiceImplTest {
 
     @Test
     void guardarEspacio_ConDatosValidos_DebeGuardarYRetornarEspacio() {
-        // Arrange
         when(espacioRepository.save(any(Espacio.class))).thenReturn(espacio);
-        when(espacioRepository.findByNombreAndUsuario(anyString(), any(Usuario.class)))
-            .thenReturn(Optional.empty());
-        
-        // Act
+                
         Espacio resultado = espacioService.guardarEspacio(espacio);
         
-        // Assert
         assertNotNull(resultado);
         assertEquals("Espacio Test", resultado.getNombre());
         verify(espacioRepository, times(1)).save(any(Espacio.class));
@@ -73,10 +69,8 @@ public class EspacioServiceImplTest {
     
     @Test
     void guardarEspacio_SinNombre_DebeLanzarExcepcion() {
-        // Arrange
         espacio.setNombre("");
         
-        // Act & Assert
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             espacioService.guardarEspacio(espacio);
         });
@@ -87,12 +81,10 @@ public class EspacioServiceImplTest {
     
     @Test
     void guardarEspacio_NombreDuplicado_DebeLanzarExcepcion() {
-        // Arrange
-        espacio.setId(null); // Nuevo espacio
+        espacio.setId(null); 
         when(espacioRepository.findByNombreAndUsuario("Espacio Test", usuario))
             .thenReturn(Optional.of(espacio));
         
-        // Act & Assert
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             espacioService.guardarEspacio(espacio);
         });
@@ -103,13 +95,10 @@ public class EspacioServiceImplTest {
     
     @Test
     void buscarPorId_ConIdExistente_DebeRetornarEspacio() {
-        // Arrange
         when(espacioRepository.findById(1L)).thenReturn(Optional.of(espacio));
         
-        // Act
         Optional<Espacio> resultado = espacioService.buscarPorId(1L);
         
-        // Assert
         assertTrue(resultado.isPresent());
         assertEquals(1L, resultado.get().getId());
         verify(espacioRepository, times(1)).findById(1L);
@@ -117,14 +106,11 @@ public class EspacioServiceImplTest {
     
     @Test
     void obtenerEspaciosPorUsuario_ConUsuarioConEspacios_DebeRetornarListaEspacios() {
-        // Arrange
         List<Espacio> espacios = Arrays.asList(espacio);
         when(espacioRepository.findByUsuario(usuario)).thenReturn(espacios);
         
-        // Act
         List<Espacio> resultado = espacioService.obtenerEspaciosPorUsuario(usuario);
         
-        // Assert
         assertFalse(resultado.isEmpty());
         assertEquals(1, resultado.size());
         assertEquals("Espacio Test", resultado.get(0).getNombre());
@@ -133,14 +119,11 @@ public class EspacioServiceImplTest {
     
     @Test
     void eliminarEspacio_ConIdExistente_DebeRetornarTrue() {
-        // Arrange
         when(espacioRepository.existsById(1L)).thenReturn(true);
         doNothing().when(espacioRepository).deleteById(1L);
         
-        // Act
         boolean resultado = espacioService.eliminarEspacio(1L);
         
-        // Assert
         assertTrue(resultado);
         verify(espacioRepository, times(1)).existsById(1L);
         verify(espacioRepository, times(1)).deleteById(1L);
@@ -148,7 +131,6 @@ public class EspacioServiceImplTest {
     
     @Test
     void agregarTarea_ConDatosValidos_DebeAñadirTareaAlEspacio() {
-        // Arrange
         when(espacioRepository.findById(1L)).thenReturn(Optional.of(espacio));
         when(espacioRepository.save(any(Espacio.class))).thenReturn(espacio);
         
@@ -156,25 +138,22 @@ public class EspacioServiceImplTest {
         nuevaTarea.setDescripcion("Nueva tarea");
         nuevaTarea.setUsuario(usuario);
         
-        // Act
         Espacio resultado = espacioService.agregarTarea(1L, nuevaTarea);
+        assertNotNull(resultado);
         
-        // Assert
         verify(espacioRepository, times(1)).findById(1L);
         verify(espacioRepository, times(1)).save(any(Espacio.class));
     }
     
     @Test
     void eliminarTarea_ConDatosValidos_DebeEliminarTareaDelEspacio() {
-        // Arrange
         when(espacioRepository.findById(1L)).thenReturn(Optional.of(espacio));
         when(tareaRepository.findById(1L)).thenReturn(Optional.of(tarea));
         when(espacioRepository.save(any(Espacio.class))).thenReturn(espacio);
         
-        // Act
         Espacio resultado = espacioService.eliminarTarea(1L, 1L);
+        assertNotNull(resultado);
         
-        // Assert
         verify(espacioRepository, times(1)).findById(1L);
         verify(tareaRepository, times(1)).findById(1L);
         verify(espacioRepository, times(1)).save(any(Espacio.class));

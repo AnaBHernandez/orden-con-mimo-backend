@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nivel Gamma - El Reino de MIMO</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --mimo-primary: #98D8C8;    /* Verde menta */
+            --mimo-accent: #F5E6A8;     /* Amarillo suave */
+            --mimo-secondary: #89CFF0;  /* Azul bebé */
+            --mimo-warm: #FFFFFF;       /* Blanco */
+            --mimo-text: #2A4747;       /* Verde oscuro para texto */
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--mimo-primary) 0%, var(--mimo-secondary) 100%);
+            color: var(--mimo-text);
+            padding: 5rem 0;
+            text-align: center;
+        }
+
+        .mimo-card {
+            border: none;
+            border-radius: 1rem;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background-color: var(--mimo-warm);
+            color: var(--mimo-text);
+        }
+
+        .mimo-card:hover {
+            transform: translateY(-5px);
+            background-color: var(--mimo-accent);
+        }
+
+        .mimo-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">Nivel Gamma</h1>
+            <h2 class="h3 mb-4">Dominando el Arte de MIMO</h2>
+            <p class="lead">El camino hacia la maestría en organización</p>
+        </div>
+    </section>
+
+    <div class="container py-5">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="mimo-card card h-100 p-4 text-center">
+                    <div class="mimo-icon">🌟</div>
+                    <h3 class="h4">Nivel Gamma</h3>
+                    <p>Descubre la magia avanzada de la organización</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mimo-card card h-100 p-4 text-center">
+                    <div class="mimo-icon">📚</div>
+                    <h3 class="h4">Aprendizaje</h3>
+                    <p>Técnicas avanzadas de organización</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mimo-card card h-100 p-4 text-center">
+                    <div class="mimo-icon">🎯</div>
+                    <h3 class="h4">Objetivos</h3>
+                    <p>Alcanza la excelencia en organización</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

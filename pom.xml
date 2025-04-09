@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ordenconmimo</groupId>
-	<artifactId>ordenconmimo</artifactId>
+	<artifactId>orden-con-mimo-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ordenconmimo</name>
+	<name>orden-con-mimo-backend</name>
 	<description>Aplicación para organización personal con método MIMO</description>
 	<url/>
 	<licenses>

@@ -36,7 +36,7 @@ mvn spring-boot:run
 
 5. La API estará disponible en:
 http://localhost:8080/api
-
+```
 📊 Estructura del Proyecto
 src/
 ├── main/
@@ -55,6 +55,8 @@ src/
 │               │   ├── repositorios/
 │               │   └── servicios/
 
+```
+```
 🌐 API REST
 🗂️ Tareas
 GET /api/tareas: Listar todas las tareas
@@ -63,7 +65,9 @@ GET /api/tareas/categoria/{categoria}: Filtrar tareas por categoría MIMO
 POST /api/tareas: Crear una nueva tarea
 PUT /api/tareas/{id}: Actualizar una tarea existente
 DELETE /api/tareas/{id}: Eliminar una tarea
+```
 
+```
 🏠 Espacios
 GET /api/espacios: Listar todos los espacios
 GET /api/espacios/{id}: Obtener un espacio por ID
@@ -71,16 +75,17 @@ POST /api/espacios: Crear un nuevo espacio
 PUT /api/espacios/{id}: Actualizar un espacio existente
 DELETE /api/espacios/{id}: Eliminar un espacio
 GET /api/espacios/{id}/tareas: Listar tareas de un espacio
-
+```
 🧪 Ejecutar Tests
 mvn test
 
+```
 📚 Documentación
 Para más detalles sobre el proyecto, consulta:
-
 Wiki de arquitectura
 Guía de desarrollo
 Documentación de API (disponible al ejecutar la aplicación)
+```
 📝 Licencia
 Este proyecto está licenciado bajo la Licencia MIT - ver el archivo LICENSE para más detalles.
 

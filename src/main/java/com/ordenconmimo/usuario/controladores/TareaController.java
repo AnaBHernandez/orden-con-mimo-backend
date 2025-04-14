@@ -21,8 +21,7 @@ public class TareaController {
     
     @GetMapping
     public String listarTareas(Model model) {
-        // En esta versión simplificada, mostramos todas las tareas
-        // o las del primer usuario si existe
+      
         var usuarios = usuarioService.findAll();
         if (!usuarios.isEmpty()) {
             model.addAttribute("tareas", tareaService.findByUsuarioId(usuarios.get(0).getId()));
@@ -30,6 +29,6 @@ public class TareaController {
         } else {
             model.addAttribute("tareas", tareaService.findAll());
         }
-        return "tareas"; // Nombre de la plantilla Thymeleaf
+        return "tareas"; 
     }
 }

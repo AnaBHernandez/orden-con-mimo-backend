@@ -117,7 +117,6 @@ class EspacioRepositoryTest {
 
     @Test
     void deberiaContarEspaciosPorUsuarioId() {
-        // Given
         Usuario usuario1 = new Usuario();
         usuario1.setNombre("Usuario 1");
         usuario1.setEmail("usuario1@example.com");
@@ -165,10 +164,8 @@ class EspacioRepositoryTest {
 
         entityManager.flush();
 
-        // When
         Optional<Espacio> resultado = espacioRepository.findByNombre("Biblioteca");
 
-        // Then
         assertTrue(resultado.isPresent());
         assertEquals("Biblioteca", resultado.get().getNombre());
     }

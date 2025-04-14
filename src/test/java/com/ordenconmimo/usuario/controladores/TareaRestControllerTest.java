@@ -43,7 +43,6 @@ class TareaRestControllerTest {
     
     @Test
     void deberiaListarTodasLasTareas() throws Exception {
-        // Given
         Tarea tarea1 = new Tarea();
         tarea1.setId(1L);
         tarea1.setNombre("Limpiar cocina");
@@ -61,7 +60,6 @@ class TareaRestControllerTest {
         List<Tarea> tareas = Arrays.asList(tarea1, tarea2);
         when(tareaService.findAll()).thenReturn(tareas);
         
-        // When & Then
         mockMvc.perform(get("/api/tareas"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(2)))
@@ -71,7 +69,6 @@ class TareaRestControllerTest {
     
     @Test
     void deberiaEncontrarTareaPorId() throws Exception {
-        // Given
         Tarea tarea = new Tarea();
         tarea.setId(1L);
         tarea.setNombre("Limpiar cocina");
@@ -81,7 +78,6 @@ class TareaRestControllerTest {
         
         when(tareaService.findById(1L)).thenReturn(Optional.of(tarea));
         
-        // When & Then
         mockMvc.perform(get("/api/tareas/1"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.nombre", is("Limpiar cocina")));
@@ -97,7 +93,6 @@ class TareaRestControllerTest {
     
     @Test
     void deberiaSalvarTarea() throws Exception {
-        // Given
         Tarea tarea = new Tarea();
         tarea.setNombre("Limpiar cocina");
         tarea.setDescripcion("Limpieza general");
@@ -113,7 +108,6 @@ class TareaRestControllerTest {
         
         when(tareaService.save(any(Tarea.class))).thenReturn(tareaGuardada);
         
-        // When & Then
         mockMvc.perform(post("/api/tareas")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(tarea)))

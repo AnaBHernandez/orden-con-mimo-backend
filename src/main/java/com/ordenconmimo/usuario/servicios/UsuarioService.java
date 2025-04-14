@@ -29,7 +29,7 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
     
-    // Mantenemos el nombre del método pero usamos email internamente
+
     public Optional<Usuario> findByUsername(String username) {
         return usuarioRepository.findByEmail(username);
     }

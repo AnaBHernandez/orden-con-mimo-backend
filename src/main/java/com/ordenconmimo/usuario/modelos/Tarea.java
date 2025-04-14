@@ -12,41 +12,39 @@ public class Tarea {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(name = "titulo", nullable = false)
     private String titulo;
-    
+
     @Column(name = "descripcion")
     private String descripcion;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "categoria_mimo", nullable = false)
     private CategoriaMIMO categoria;
-    
+
     @Column(name = "completada", nullable = false)
     private boolean completada = false;
-    
+
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion = LocalDateTime.now();
-    
+
     @Column(name = "fecha_limite")
     private java.time.LocalDate fechaLimite;
-    
+
     @ManyToOne
     @JoinColumn(name = "usuario_id")
-    @JsonIgnoreProperties({"tareas", "espacios"})
+    @JsonIgnoreProperties({ "tareas", "espacios" })
     private Usuario usuario;
-    
+
     @ManyToOne
     @JoinColumn(name = "espacio_id")
-    @JsonIgnoreProperties({"tareas", "usuario"})
+    @JsonIgnoreProperties({ "tareas", "usuario" })
     private Espacio espacio;
-    
-    // Constructor sin parámetros
+
     public Tarea() {
     }
-    
-    // Constructor con parámetros que usa el test
+
     public Tarea(String titulo, String descripcion, CategoriaMIMO categoria) {
         this.titulo = titulo;
         this.descripcion = descripcion;
@@ -54,15 +52,14 @@ public class Tarea {
         this.completada = false;
         this.fechaCreacion = LocalDateTime.now();
     }
-    
-    // Getters y setters
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }      
+    }
 
     public String getDescripcion() {
         return descripcion;
@@ -119,20 +116,19 @@ public class Tarea {
     public void setEspacio(Espacio espacio) {
         this.espacio = espacio;
     }
-    
+
     public String getTitulo() {
         return titulo;
     }
-    
+
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
-    
-    // Métodos para compatibilidad con pruebas existentes
+
     public String getNombre() {
         return getTitulo();
     }
-    
+
     public void setNombre(String nombre) {
         setTitulo(nombre);
     }

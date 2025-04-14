@@ -32,7 +32,7 @@ public class TareaService {
     }
     
     public List<Tarea> findByCategoriaMIMO(CategoriaMIMO categoria) {
-        // Implementación manual para evitar problemas
+   
         return tareaRepository.findAll().stream()
                         .filter(t -> t.getCategoria() == categoria)
                         .collect(Collectors.toList());
@@ -53,9 +53,8 @@ public class TareaService {
         return tareaRepository.findByUsuarioId(usuarioId);
     }
     
-    // Nuevo método añadido para resolver el error
-    public List<Tarea> findByCompletadaAndUsuarioId(boolean completada, Long usuarioId) {
-        // Implementación manual
+
+    public List<Tarea> findByCompletadaAndUsuarioId(boolean completada, Long usuarioId) {   
         return tareaRepository.findAll().stream()
                 .filter(t -> t.isCompletada() == completada && 
                              t.getUsuario() != null && 

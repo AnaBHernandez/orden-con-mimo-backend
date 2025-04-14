@@ -232,7 +232,7 @@
     
     <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function() {
-            // Filtrar por categoría
+    
             const categoryButtons = document.querySelectorAll('.category-btn');
             const taskItems = document.querySelectorAll('.task-item');
             
@@ -257,7 +257,6 @@
                 });
             });
             
-            // Completar tarea
             const completeButtons = document.querySelectorAll('.complete-btn');
             
             completeButtons.forEach(button => {
@@ -279,7 +278,6 @@
                 });
             });
             
-            // Eliminar tarea
             const deleteButtons = document.querySelectorAll('.delete-btn');
             
             deleteButtons.forEach(button => {
@@ -300,12 +298,11 @@
                 });
             });
             
-            // Agregar nueva tarea (por ahora solo muestra un alert)
             const addTaskButton = document.querySelector('.add-task-btn');
             
             addTaskButton.addEventListener('click', function() {
                 alert('Funcionalidad de agregar tarea en desarrollo');
-                // Aquí se implementaría un modal o redirección a un formulario
+                
             });
         });
     </script>

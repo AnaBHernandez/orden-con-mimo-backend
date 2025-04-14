@@ -7,13 +7,12 @@ import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource(properties = {
-    "spring.main.web-application-type=none" // Evita iniciar el servidor web
+    "spring.main.web-application-type=none" 
 })
 class OrdenconmimoApplicationTest {
 
     @Test
     void contextLoads() {
-        // Simplemente verifica que el contexto de Spring se carga correctamente
-        // Sin iniciar el servidor web
+    
     }
 }

@@ -6,10 +6,6 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Modelo sencillo para representar usuarios en la aplicación.
- * No incluye autenticación o seguridad avanzada.
- */
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
@@ -57,12 +53,12 @@ public class Usuario {
         this.apellido = apellido;
         this.email = email;
         this.password = password;
-        this.username = username; // Añadir username
+        this.username = username; /
         this.fechaCreacion = java.time.LocalDateTime.now();
         this.fechaActualizacion = java.time.LocalDateTime.now();
     }
     
-    // Getters y setters
+
     public String getUsername() {
         return username;
     }

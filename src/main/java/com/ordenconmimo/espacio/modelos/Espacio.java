@@ -25,19 +25,18 @@ public class Espacio {
     @OneToMany(mappedBy = "espacio", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("espacio")
     private List<Tarea> tareas = new ArrayList<>();
-    
-    // Constructor sin parámetros
+ 
     public Espacio() {
     }
     
-    // Constructor con parámetros que usa el test
+   
     public Espacio(String nombre, String descripcion) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.fechaCreacion = LocalDateTime.now();
     }
     
-    // Métodos para gestionar tareas
+
     public void addTarea(Tarea tarea) {
         tareas.add(tarea);
         tarea.setEspacio(this);
@@ -47,8 +46,7 @@ public class Espacio {
         tareas.remove(tarea);
         tarea.setEspacio(null);
     }
-    
-    // Getters y setters
+
     public Long getId() {
         return id;
     }

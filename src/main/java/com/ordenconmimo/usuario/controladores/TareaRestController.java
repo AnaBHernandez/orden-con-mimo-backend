@@ -21,23 +21,21 @@ public class TareaRestController {
 
     @GetMapping
     public List<Tarea> getAllTareas() {
-        return tareaService.findAll(); // Usar findAll() en lugar de obtenerTodasLasTareas()
+        return tareaService.findAll(); 
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Tarea> getTareaById(@PathVariable Long id) {
-        return tareaService.findById(id) // Usar findById() en lugar de obtenerTareaPorId()
+        return tareaService.findById(id) 
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Modificar en TareaRestController.java
     @PostMapping
     public ResponseEntity<Tarea> createTarea(@RequestBody Tarea tarea) {
-        // Si no tiene usuario asignado, asignar el usuario predeterminado (id=1)
         if (tarea.getUsuario() == null) {
             Usuario usuarioPredeterminado = new Usuario();
-            usuarioPredeterminado.setId(1L); // El usuario con ID 1 del script data-h2.sql
+            usuarioPredeterminado.setId(1L); 
             tarea.setUsuario(usuarioPredeterminado);
         }
 

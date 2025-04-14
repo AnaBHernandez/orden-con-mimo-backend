@@ -31,24 +31,21 @@ class TareaServiceTest {
     @Test
     @Disabled("El método obtenerTodasLasTareas no está implementado")
     void deberiaObtenerTodasLasTareas() {
-        // Test deshabilitado - usar findAll() en su lugar
     }
     
     @Test
     @Disabled("El método obtenerTareaPorId no está implementado")
     void deberiaObtenerTareaPorId() {
-        // Test deshabilitado - usar findById() en su lugar
     }
     
     @Test
     @Disabled("El método guardarTarea no está implementado")
     void deberiaGuardarTarea() {
-        // Test deshabilitado - usar save() en su lugar
     }
     
     @Test
     void deberiaEncontrarTodasLasTareas() {
-        // Given
+      
         Tarea tarea1 = new Tarea();
         tarea1.setId(1L);
         tarea1.setNombre("Limpiar cocina");
@@ -62,10 +59,9 @@ class TareaServiceTest {
         List<Tarea> tareas = Arrays.asList(tarea1, tarea2);
         when(tareaRepository.findAll()).thenReturn(tareas);
         
-        // When
+      
         List<Tarea> resultado = tareaService.findAll();
-        
-        // Then
+  
         assertEquals(2, resultado.size());
         assertEquals("Limpiar cocina", resultado.get(0).getNombre());
         verify(tareaRepository).findAll();
@@ -73,7 +69,7 @@ class TareaServiceTest {
     
     @Test
     void deberiaEncontrarTareaPorId() {
-        // Given
+   
         Tarea tarea = new Tarea();
         tarea.setId(1L);
         tarea.setNombre("Limpiar cocina");
@@ -81,10 +77,10 @@ class TareaServiceTest {
         
         when(tareaRepository.findById(1L)).thenReturn(Optional.of(tarea));
         
-        // When
+    
         Optional<Tarea> resultado = tareaService.findById(1L);
         
-        // Then
+    
         assertTrue(resultado.isPresent());
         assertEquals("Limpiar cocina", resultado.get().getNombre());
         verify(tareaRepository).findById(1L);
@@ -92,7 +88,7 @@ class TareaServiceTest {
     
     @Test
     void deberiaSalvarTarea() {
-        // Given
+    
         Tarea tarea = new Tarea();
         tarea.setNombre("Limpiar cocina");
         tarea.setCategoria(CategoriaMIMO.ORDENA);
@@ -104,10 +100,9 @@ class TareaServiceTest {
         
         when(tareaRepository.save(any(Tarea.class))).thenReturn(tareaGuardada);
         
-        // When
+    
         Tarea resultado = tareaService.save(tarea);
         
-        // Then
         assertEquals(1L, resultado.getId());
         assertEquals("Limpiar cocina", resultado.getNombre());
         verify(tareaRepository).save(tarea);
@@ -115,19 +110,15 @@ class TareaServiceTest {
     
     @Test
     void deberiaEliminarTareaPorId() {
-        // Given
         doNothing().when(tareaRepository).deleteById(1L);
         
-        // When
         tareaService.deleteById(1L);
         
-        // Then
         verify(tareaRepository).deleteById(1L);
     }
     
     @Test
     void deberiaEncontrarTareasPorCategoria() {
-        // Given
         Tarea tarea1 = new Tarea();
         tarea1.setId(1L);
         tarea1.setNombre("Limpiar cocina");
@@ -141,10 +132,8 @@ class TareaServiceTest {
         List<Tarea> tareas = Arrays.asList(tarea1, tarea2);
         when(tareaRepository.findAll()).thenReturn(tareas);
         
-        // When
         List<Tarea> resultado = tareaService.findByCategoriaMIMO(CategoriaMIMO.ORDENA);
         
-        // Then
         assertEquals(1, resultado.size());
         assertEquals("Limpiar cocina", resultado.get(0).getNombre());
         verify(tareaRepository).findAll();

@@ -50,7 +50,6 @@ class TareaTest {
     @Test
     @Disabled("Los métodos setPrioridad y getPrioridad no están definidos en la clase Tarea")
     void deberiaAsignarPrioridad() {
-        // Test deshabilitado porque los métodos no existen
     }
     @Test
     void deberiaSetearIdCorrectamente() {
@@ -68,10 +67,8 @@ class TareaTest {
     Tarea tarea2 = new Tarea();
     tarea2.setId(1L);
     
-    // Comparar objetos si equals está implementado
-    assertEquals(tarea1, tarea1); // Reflexividad
+    assertEquals(tarea1, tarea1); 
     
-    // No comparamos con otra tarea ya que no sabemos si equals está implementado correctamente
 }
 
     @Test

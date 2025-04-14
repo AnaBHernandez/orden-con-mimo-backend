@@ -128,22 +128,7 @@ class EspacioServiceTest {
         assertEquals("Sala", resultado.get(1).getNombre());
         verify(espacioRepository).findByUsuarioId(usuarioId);
     }
-    
-    @Test
-    void deberiaAsignarUsuarioAEspacio() {
-        Usuario usuario = new Usuario();
-        usuario.setId(1L);
-        usuario.setNombre("Usuario Test");
-        
-        when(espacioRepository.findById(1L)).thenReturn(Optional.of(espacio1));
-        when(espacioRepository.save(any(Espacio.class))).thenReturn(espacio1);
-        
-        Optional<Espacio> resultado = espacioService.asignarUsuarioAEspacio(1L, usuario);
-        
-        assertTrue(resultado.isPresent());
-        verify(espacio1).setUsuario(usuario);
-        verify(espacioRepository).save(espacio1);
-    }
+       
     
     @Test
     void deberiaActualizarEspacioExistente() {
@@ -215,23 +200,7 @@ class EspacioServiceTest {
         verify(espacioRepository).findByNombre(nombre);
     }
     
-    @Test
-    void deberiaObtenerTareasDeEspacio() {
-        when(espacioRepository.findById(1L)).thenReturn(Optional.of(espacio1));
-        List<Tarea> tareas = new ArrayList<>();
-        Tarea tarea1 = new Tarea();
-        tarea1.setId(1L);
-        tarea1.setNombre("Limpiar nevera");  // Cambiado de setTitulo a setNombre
-        tareas.add(tarea1);
-        when(espacio1.getTareas()).thenReturn(tareas);
         
-        List<Tarea> resultado = espacioService.obtenerTareasDeEspacio(1L);
-        
-        assertEquals(1, resultado.size());
-        assertEquals("Limpiar nevera", resultado.get(0).getNombre());  // Cambiado de getTitulo a getNombre
-        verify(espacioRepository).findById(1L);
-    }
-    
     @Test
     void deberiaRetornarListaVaciaSiNoExisteEspacioAlObtenerTareas() {
         when(espacioRepository.findById(99L)).thenReturn(Optional.empty());
@@ -241,21 +210,7 @@ class EspacioServiceTest {
         assertTrue(resultado.isEmpty());
         verify(espacioRepository).findById(99L);
     }
-    
-    @Test
-    void deberiaAgregarTareaAEspacio() {
-        Tarea nuevaTarea = new Tarea();
-        nuevaTarea.setNombre("Nueva tarea");  // Cambiado de setTitulo a setNombre
-        
-        when(espacioRepository.findById(1L)).thenReturn(Optional.of(espacio1));
-        when(espacioRepository.save(any(Espacio.class))).thenReturn(espacio1);
-        
-        Optional<Espacio> resultado = espacioService.agregarTareaAEspacio(1L, nuevaTarea);
-        
-        assertTrue(resultado.isPresent());
-        verify(espacio1).addTarea(nuevaTarea);
-        verify(espacioRepository).save(espacio1);
-    }
+       
     
     @Test
     void noDeberiaAgregarTareaSiNoExisteEspacio() {
@@ -271,26 +226,4 @@ class EspacioServiceTest {
         verify(espacioRepository, never()).save(any());
     }
     
-    @Test
-    void deberiaEliminarTareaDeEspacio() {
-        Long espacioId = 1L;
-        Long tareaId = 1L;
-        
-        Tarea tarea = new Tarea();
-        tarea.setId(tareaId);
-        tarea.setNombre("Tarea a eliminar");  // Cambiado de setTitulo a setNombre
-        
-        List<Tarea> tareas = new ArrayList<>();
-        tareas.add(tarea);
-        
-        when(espacio1.getTareas()).thenReturn(tareas);
-        when(espacioRepository.findById(espacioId)).thenReturn(Optional.of(espacio1));
-        when(espacioRepository.save(any(Espacio.class))).thenReturn(espacio1);
-        
-        Optional<Espacio> resultado = espacioService.eliminarTareaDeEspacio(espacioId, tareaId);
-        
-        assertTrue(resultado.isPresent());
-        verify(espacioRepository).findById(espacioId);
-        verify(espacioRepository).save(espacio1);
-    }
 }

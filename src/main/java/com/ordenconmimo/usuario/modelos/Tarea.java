@@ -1,118 +1,109 @@
 package com.ordenconmimo.usuario.modelos;
 
-import java.time.LocalDateTime;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ordenconmimo.espacio.modelos.Espacio;
-
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import com.ordenconmimo.usuario.modelos.Usuario;
 
 @Entity
+@Table(name = "tareas")
 public class Tarea {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
-    private Long id;    
-    private String nombre;    
-    private String descripcion;    
-    private LocalDateTime fechaCreacion;    
-    private LocalDateTime fechaLimite;    
-    private boolean completada;
+    @Column(name = "titulo", nullable = false)
+    private String titulo;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "espacio_id")
-    private Espacio espacio;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id")
-    private Usuario usuario;
+    @Column(name = "descripcion")
+    private String descripcion;
     
     @Enumerated(EnumType.STRING)
+    @Column(name = "categoria_mimo", nullable = false)
     private CategoriaMIMO categoria;
     
+    @Column(name = "completada", nullable = false)
+    private boolean completada = false;
+    
+    @Column(name = "fecha_creacion")
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
+    
+    @Column(name = "fecha_limite")
+    private java.time.LocalDate fechaLimite;
+    
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    @JsonIgnoreProperties({"tareas", "espacios"})
+    private Usuario usuario;
+    
+    @ManyToOne
+    @JoinColumn(name = "espacio_id")
+    @JsonIgnoreProperties({"tareas", "usuario"})
+    private Espacio espacio;
+    
+    // Constructor sin parámetros
     public Tarea() {
-        this.fechaCreacion = LocalDateTime.now();
-        this.completada = false;
     }
     
-    public Tarea(String nombre, String descripcion, CategoriaMIMO categoria) {
-        this();
-        this.nombre = nombre;
+    // Constructor con parámetros que usa el test
+    public Tarea(String titulo, String descripcion, CategoriaMIMO categoria) {
+        this.titulo = titulo;
         this.descripcion = descripcion;
         this.categoria = categoria;
+        this.completada = false;
+        this.fechaCreacion = LocalDateTime.now();
     }
     
+    // Getters y setters
     public Long getId() {
         return id;
     }
-    
+
     public void setId(Long id) {
         this.id = id;
-    }
-    
-    public String getNombre() {
-        return nombre;
-    }
-    
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-    
+    }      
+
     public String getDescripcion() {
         return descripcion;
     }
-    
+
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-    
-    public LocalDateTime getFechaCreacion() {
-        return fechaCreacion;
-    }
-    
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-    
-    public LocalDateTime getFechaLimite() {
-        return fechaLimite;
-    }
-    
-    public void setFechaLimite(LocalDateTime fechaLimite) {
-        this.fechaLimite = fechaLimite;
-    }
-    
-    public boolean isCompletada() {
-        return completada;
-    }
-    
-    public void setCompletada(boolean completada) {
-        this.completada = completada;
-    }
-    
+
     public CategoriaMIMO getCategoria() {
         return categoria;
     }
-    
+
     public void setCategoria(CategoriaMIMO categoria) {
         this.categoria = categoria;
     }
 
-    public Espacio getEspacio() {
-        return espacio;
+    public boolean isCompletada() {
+        return completada;
     }
-    public void setEspacio(Espacio espacio) {
-        this.espacio = espacio;
+
+    public void setCompletada(boolean completada) {
+        this.completada = completada;
     }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public java.time.LocalDate getFechaLimite() {
+        return fechaLimite;
+    }
+
+    public void setFechaLimite(java.time.LocalDate fechaLimite) {
+        this.fechaLimite = fechaLimite;
+    }
+
     public Usuario getUsuario() {
         return usuario;
     }
@@ -121,43 +112,28 @@ public class Tarea {
         this.usuario = usuario;
     }
 
-    
-    @Override
-    public String toString() {
-    return "Tarea{" +
-            "id=" + id +
-            ", nombre='" + nombre + '\'' +
-            ", descripcion='" + descripcion + '\'' +
-            ", fechaCreacion=" + fechaCreacion +
-            ", fechaLimite=" + fechaLimite +
-            ", completada=" + completada +
-            ", categoria=" + categoria +
-            ", espacio=" + (espacio != null ? espacio.getNombre() : "ninguno") +
-            '}';
-}
-    
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
+    public Espacio getEspacio() {
+        return espacio;
+    }
+
+    public void setEspacio(Espacio espacio) {
+        this.espacio = espacio;
     }
     
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Tarea other = (Tarea) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
+    public String getTitulo() {
+        return titulo;
+    }
+    
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+    
+    // Métodos para compatibilidad con pruebas existentes
+    public String getNombre() {
+        return getTitulo();
+    }
+    
+    public void setNombre(String nombre) {
+        setTitulo(nombre);
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -15,12 +14,8 @@ import java.util.Optional;
 @RequestMapping("/api/espacios")
 public class EspacioRestController {
 
-    private final EspacioService espacioService;
-
     @Autowired
-    public EspacioRestController(EspacioService espacioService) {
-        this.espacioService = espacioService;
-    }
+    private EspacioService espacioService;
 
     @GetMapping
     public ResponseEntity<List<Espacio>> obtenerTodosLosEspacios() {
@@ -63,5 +58,19 @@ public class EspacioRestController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(espacioService.obtenerTareasDeEspacio(id));
+    }
+
+    @PostMapping("/{id}/tareas")
+    public ResponseEntity<Espacio> agregarTareaAEspacio(@PathVariable Long id, @RequestBody Tarea tarea) {
+        Optional<Espacio> espacioActualizado = espacioService.agregarTareaAEspacio(id, tarea);
+        return espacioActualizado.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+    
+    @DeleteMapping("/{espacioId}/tareas/{tareaId}")
+    public ResponseEntity<Espacio> eliminarTareaDeEspacio(@PathVariable Long espacioId, @PathVariable Long tareaId) {
+        Optional<Espacio> espacioActualizado = espacioService.eliminarTareaDeEspacio(espacioId, tareaId);
+        return espacioActualizado.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

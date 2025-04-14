@@ -6,20 +6,13 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class CorsConfig {
+public class CorsConfig implements WebMvcConfigurer {
     
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:5500",
-                        "http://localhost:8081")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
-                        .allowedHeaders("*")
-                        .allowCredentials(true);
-            }
-        };
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/api/**")
+            .allowedOrigins("http://localhost:8081", "http://localhost:8083") // Añade aquí el origen de websim.ai
+            .allowedMethods("GET", "POST", "PUT", "DELETE")
+            .allowedHeaders("*");
     }
-}
+}   

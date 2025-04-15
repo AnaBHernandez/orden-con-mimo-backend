@@ -1,15 +1,16 @@
 package com.ordenconmimo.espacio.repositorios;
+
 import com.ordenconmimo.espacio.modelos.Espacio;
+import com.ordenconmimo.usuario.modelos.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
+
 @Repository
 public interface EspacioRepository extends JpaRepository<Espacio, Long> {
+    List<Espacio> findByUsuario(Usuario usuario);
     List<Espacio> findByUsuarioId(Long usuarioId);
-    Optional<Espacio> findByNombreAndUsuarioId(String nombre, Long usuarioId);
-    List<Espacio> findByNombreContainingIgnoreCase(String texto);
-    Long countByUsuarioId(Long usuarioId);
-    Optional<Espacio> findByNombre(String nombre);
+    long countByUsuarioId(Long usuarioId);
+    Espacio findByNombre(String nombre);
 }

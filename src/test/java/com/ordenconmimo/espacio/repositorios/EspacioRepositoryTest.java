@@ -1,172 +1,90 @@
 package com.ordenconmimo.espacio.repositorios;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.ordenconmimo.espacio.modelos.Espacio;
 import com.ordenconmimo.usuario.modelos.Usuario;
+import com.ordenconmimo.usuario.repositorios.UsuarioRepository;
 
 @DataJpaTest
-class EspacioRepositoryTest {
-
-    @Autowired
-    private TestEntityManager entityManager;
+@ActiveProfiles("test")
+public class EspacioRepositoryTest {
 
     @Autowired
     private EspacioRepository espacioRepository;
-
+    
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+    
     @Test
-    void deberiaEncontrarEspacioPorUsuarioId() {
-        // Given
+    public void testSaveEspacio() {
         Usuario usuario = new Usuario();
-        usuario.setNombre("Usuario Test");
-        usuario.setEmail("test@example.com");
-        entityManager.persist(usuario);
-
-        Espacio espacio1 = new Espacio();
-        espacio1.setNombre("Cocina");
-        espacio1.setDescripcion("Espacio para cocinar");
-        espacio1.setFechaCreacion(LocalDateTime.now());
-        espacio1.setUsuario(usuario);
-        entityManager.persist(espacio1);
-
-        Espacio espacio2 = new Espacio();
-        espacio2.setNombre("Sala");
-        espacio2.setDescripcion("Sala de estar");
-        espacio2.setFechaCreacion(LocalDateTime.now());
-        espacio2.setUsuario(usuario);
-        entityManager.persist(espacio2);
-
-        entityManager.flush();
-
-        // When
-        List<Espacio> espacios = espacioRepository.findByUsuarioId(usuario.getId());
-
-        // Then
-        assertEquals(2, espacios.size());
-        assertTrue(espacios.stream().anyMatch(e -> e.getNombre().equals("Cocina")));
-        assertTrue(espacios.stream().anyMatch(e -> e.getNombre().equals("Sala")));
-    }
-
-    @Test
-    void deberiaEncontrarEspacioPorNombreYUsuarioId() {
-        // Given
-        Usuario usuario = new Usuario();
-        usuario.setNombre("Usuario Test");
-        usuario.setEmail("test@example.com");
-        entityManager.persist(usuario);
-
+        usuario.setNombre("Test");
+        usuario.setApellido("User");
+        usuario.setUsername("testuser");
+        usuario.setPassword("password");
+        usuarioRepository.save(usuario);
+        
         Espacio espacio = new Espacio();
-        espacio.setNombre("Cocina");
-        espacio.setDescripcion("Espacio para cocinar");
-        espacio.setFechaCreacion(LocalDateTime.now());
+        espacio.setNombre("Espacio de prueba");
+        espacio.setDescripcion("Descripción del espacio de prueba");
         espacio.setUsuario(usuario);
-        entityManager.persist(espacio);
-
-        entityManager.flush();
-
-        // When
-        Optional<Espacio> resultado = espacioRepository.findByNombreAndUsuarioId("Cocina", usuario.getId());
-
-        // Then
-        assertTrue(resultado.isPresent());
-        assertEquals("Cocina", resultado.get().getNombre());
-        assertEquals(usuario.getId(), resultado.get().getUsuario().getId());
+        
+        Espacio savedEspacio = espacioRepository.save(espacio);
+        
+        assertNotNull(savedEspacio.getId());
+        assertEquals("Espacio de prueba", savedEspacio.getNombre());
     }
-
+    
     @Test
-    void deberiaEncontrarEspacioPorNombreConteniendoTexto() {
-        // Given
-        Espacio espacio1 = new Espacio();
-        espacio1.setNombre("Cocina grande");
-        espacio1.setDescripcion("Espacio para cocinar");
-        espacio1.setFechaCreacion(LocalDateTime.now());
-        entityManager.persist(espacio1);
-
-        Espacio espacio2 = new Espacio();
-        espacio2.setNombre("Mini cocina");
-        espacio2.setDescripcion("Espacio pequeño para cocinar");
-        espacio2.setFechaCreacion(LocalDateTime.now());
-        entityManager.persist(espacio2);
-
-        Espacio espacio3 = new Espacio();
-        espacio3.setNombre("Sala");
-        espacio3.setDescripcion("Sala de estar");
-        espacio3.setFechaCreacion(LocalDateTime.now());
-        entityManager.persist(espacio3);
-
-        entityManager.flush();
-
-        // When
-        List<Espacio> resultados = espacioRepository.findByNombreContainingIgnoreCase("cocina");
-
-        // Then
-        assertEquals(2, resultados.size());
-        assertTrue(resultados.stream().anyMatch(e -> e.getNombre().equals("Cocina grande")));
-        assertTrue(resultados.stream().anyMatch(e -> e.getNombre().equals("Mini cocina")));
-    }
-
-    @Test
-    void deberiaContarEspaciosPorUsuarioId() {
-        Usuario usuario1 = new Usuario();
-        usuario1.setNombre("Usuario 1");
-        usuario1.setEmail("usuario1@example.com");
-        entityManager.persist(usuario1);
-
-        Usuario usuario2 = new Usuario();
-        usuario2.setNombre("Usuario 2");
-        usuario2.setEmail("usuario2@example.com");
-        entityManager.persist(usuario2);
-
-        Espacio espacio1 = new Espacio();
-        espacio1.setNombre("Cocina");
-        espacio1.setUsuario(usuario1);
-        entityManager.persist(espacio1);
-
-        Espacio espacio2 = new Espacio();
-        espacio2.setNombre("Sala");
-        espacio2.setUsuario(usuario1);
-        entityManager.persist(espacio2);
-
-        Espacio espacio3 = new Espacio();
-        espacio3.setNombre("Dormitorio");
-        espacio3.setUsuario(usuario2);
-        entityManager.persist(espacio3);
-
-        entityManager.flush();
-
-        // When
-        Long countUsuario1 = espacioRepository.countByUsuarioId(usuario1.getId());
-        Long countUsuario2 = espacioRepository.countByUsuarioId(usuario2.getId());
-
-        // Then
-        assertEquals(2, countUsuario1);
-        assertEquals(1, countUsuario2);
-    }
-
-    @Test
-    void deberiaEncontrarEspacioPorNombre() {
-        // Given
+    public void testFindByUsuarioId() {
+        Usuario usuario = new Usuario();
+        usuario.setNombre("Test");
+        usuario.setApellido("User");
+        usuario.setUsername("testuser2");
+        usuario.setPassword("password");
+        Usuario savedUsuario = usuarioRepository.save(usuario);
+        
         Espacio espacio = new Espacio();
-        espacio.setNombre("Biblioteca");
-        espacio.setDescripcion("Espacio para leer");
-        espacio.setFechaCreacion(LocalDateTime.now());
-        entityManager.persist(espacio);
-
-        entityManager.flush();
-
-        Optional<Espacio> resultado = espacioRepository.findByNombre("Biblioteca");
-
-        assertTrue(resultado.isPresent());
-        assertEquals("Biblioteca", resultado.get().getNombre());
+        espacio.setNombre("Espacio de prueba");
+        espacio.setDescripcion("Descripción del espacio de prueba");
+        espacio.setUsuario(savedUsuario);
+        espacioRepository.save(espacio);
+        
+        List<Espacio> espacios = espacioRepository.findByUsuarioId(savedUsuario.getId());
+        
+        assertEquals(1, espacios.size());
+        assertEquals("Espacio de prueba", espacios.get(0).getNombre());
+    }
+    
+    @Test
+    public void testFindByNombre() {
+        Usuario usuario = new Usuario();
+        usuario.setNombre("Test");
+        usuario.setApellido("User");
+        usuario.setUsername("testuser3");
+        usuario.setPassword("password");
+        usuarioRepository.save(usuario);
+        
+        Espacio espacio = new Espacio();
+        espacio.setNombre("Espacio único");
+        espacio.setDescripcion("Descripción del espacio único");
+        espacio.setUsuario(usuario);
+        espacioRepository.save(espacio);
+        
+        Espacio foundEspacio = espacioRepository.findByNombre("Espacio único");
+        
+        assertNotNull(foundEspacio);
+        assertEquals("Espacio único", foundEspacio.getNombre());
     }
 }

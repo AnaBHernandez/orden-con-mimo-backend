@@ -1,52 +1,50 @@
 package com.ordenconmimo.espacio.modelos;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ordenconmimo.usuario.modelos.Tarea;
 import com.ordenconmimo.usuario.modelos.Usuario;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "espacio")
 public class Espacio {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "nombre")
     private String nombre;
+    
+    @Column(name = "descripcion")
     private String descripcion;
+    
+    @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
     
     @ManyToOne
     @JoinColumn(name = "usuario_id")
-    @JsonIgnoreProperties({"espacios", "tareas"})
     private Usuario usuario;
     
     @OneToMany(mappedBy = "espacio", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("espacio")
     private List<Tarea> tareas = new ArrayList<>();
- 
-    public Espacio() {
-    }
     
-   
-    public Espacio(String nombre, String descripcion) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
+    // Constructor vacío
+    public Espacio() {
         this.fechaCreacion = LocalDateTime.now();
     }
     
-
-    public void addTarea(Tarea tarea) {
-        tareas.add(tarea);
-        tarea.setEspacio(this);
+    // Constructor con nombre y descripción
+    public Espacio(String nombre, String descripcion) {
+        this();
+        this.nombre = nombre;
+        this.descripcion = descripcion;
     }
     
-    public void removeTarea(Tarea tarea) {
-        tareas.remove(tarea);
-        tarea.setEspacio(null);
-    }
-
+    // Getters y setters
     public Long getId() {
         return id;
     }
@@ -94,5 +92,15 @@ public class Espacio {
     public void setTareas(List<Tarea> tareas) {
         this.tareas = tareas;
     }
-
+    
+    // Métodos de conveniencia para la relación bidireccional
+    public void addTarea(Tarea tarea) {
+        tareas.add(tarea);
+        tarea.setEspacio(this);
+    }
+    
+    public void removeTarea(Tarea tarea) {
+        tareas.remove(tarea);
+        tarea.setEspacio(null);
+    }
 }

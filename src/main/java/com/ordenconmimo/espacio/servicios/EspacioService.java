@@ -4,101 +4,95 @@ import com.ordenconmimo.espacio.modelos.Espacio;
 import com.ordenconmimo.espacio.repositorios.EspacioRepository;
 import com.ordenconmimo.usuario.modelos.Tarea;
 import com.ordenconmimo.usuario.modelos.Usuario;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Collections;
 
 @Service
 public class EspacioService {
 
     @Autowired
     private EspacioRepository espacioRepository;
-    
+
     public List<Espacio> obtenerTodosLosEspacios() {
         return espacioRepository.findAll();
     }
-    
+
     public Optional<Espacio> obtenerEspacioPorId(Long id) {
         return espacioRepository.findById(id);
     }
-    
+
+    @Transactional
     public Espacio guardarEspacio(Espacio espacio) {
+        if (espacio.getFechaCreacion() == null) {
+            espacio.setFechaCreacion(LocalDateTime.now());
+        }
         return espacioRepository.save(espacio);
     }
-    
+
+    @Transactional
     public void eliminarEspacio(Long id) {
-        if (espacioRepository.existsById(id)) {
-            espacioRepository.deleteById(id);
-        }
+        espacioRepository.deleteById(id);
     }
 
     public boolean existeEspacio(Long id) {
         return espacioRepository.existsById(id);
     }
-    
-    public Optional<Espacio> actualizarEspacio(Long id, Espacio espacioActualizado) {
-        return obtenerEspacioPorId(id)
-                .map(espacioExistente -> {
-                    espacioActualizado.setId(id);
-                    if (espacioExistente.getFechaCreacion() != null) {
-                        espacioActualizado.setFechaCreacion(espacioExistente.getFechaCreacion());
-                    }
-                    if (espacioExistente.getTareas() != null && !espacioExistente.getTareas().isEmpty()) {
-                        espacioActualizado.setTareas(espacioExistente.getTareas());
-                    }
-                    if (espacioExistente.getUsuario() != null) {
-                        espacioActualizado.setUsuario(espacioExistente.getUsuario());
-                    }
-                    return espacioRepository.save(espacioActualizado);
-                });
+
+    public List<Tarea> obtenerTareasDeEspacio(Long id) {
+        Optional<Espacio> espacioOpt = espacioRepository.findById(id);
+        return espacioOpt.map(Espacio::getTareas).orElse(null);
     }
 
-    public Optional<Espacio> asignarUsuarioAEspacio(Long espacioId, Usuario usuario) {
-        return obtenerEspacioPorId(espacioId)
-                .map(espacio -> {
-                    espacio.setUsuario(usuario);
-                    return espacioRepository.save(espacio);
-                });
+    @Transactional
+    public Tarea agregarTareaAEspacio(Long espacioId, Tarea tarea) {
+        Optional<Espacio> espacioOpt = espacioRepository.findById(espacioId);
+        if (espacioOpt.isPresent()) {
+            Espacio espacio = espacioOpt.get();
+            tarea.setEspacio(espacio);
+            espacio.getTareas().add(tarea);
+            espacioRepository.save(espacio);
+            return tarea;
+        }
+        return null;
+    }
+
+    @Transactional
+    public void eliminarTareaDeEspacio(Long espacioId, Long tareaId) {
+        Optional<Espacio> espacioOpt = espacioRepository.findById(espacioId);
+        if (espacioOpt.isPresent()) {
+            Espacio espacio = espacioOpt.get();
+            espacio.getTareas().removeIf(tarea -> tarea.getId().equals(tareaId));
+            espacioRepository.save(espacio);
+        }
     }
 
     public List<Espacio> obtenerEspaciosPorUsuario(Long usuarioId) {
         return espacioRepository.findByUsuarioId(usuarioId);
     }
 
+    @Transactional
+    public Espacio actualizarEspacio(Long id, Espacio espacioActualizado) {
+        Optional<Espacio> espacioOpt = espacioRepository.findById(id);
+        if (espacioOpt.isPresent()) {
+            Espacio espacio = espacioOpt.get();
+            espacio.setNombre(espacioActualizado.getNombre());
+            espacio.setDescripcion(espacioActualizado.getDescripcion());
+            // Mantener el usuario y las tareas
+            return espacioRepository.save(espacio);
+        }
+        return null;
+    }
+
     public long contarEspaciosPorUsuario(Long usuarioId) {
         return espacioRepository.countByUsuarioId(usuarioId);
     }
 
-    public Optional<Espacio> findByNombre(String nombre) {
+    public Espacio findByNombre(String nombre) {
         return espacioRepository.findByNombre(nombre);
-    }
-    
-    public List<Tarea> obtenerTareasDeEspacio(Long espacioId) {
-        return obtenerEspacioPorId(espacioId)
-                .map(Espacio::getTareas)
-                .orElse(Collections.emptyList());
-    }
-
-    public Optional<Espacio> agregarTareaAEspacio(Long espacioId, Tarea tarea) {
-        return obtenerEspacioPorId(espacioId)
-                .map(espacio -> {
-                    espacio.addTarea(tarea);
-                    return espacioRepository.save(espacio);
-                });
-    }
-
-    public Optional<Espacio> eliminarTareaDeEspacio(Long espacioId, Long tareaId) {
-        return obtenerEspacioPorId(espacioId)
-                .map(espacio -> {
-                    espacio.getTareas().stream()
-                        .filter(tarea -> tarea.getId().equals(tareaId))
-                        .findFirst()
-                        .ifPresent(espacio::removeTarea);
-                    return espacioRepository.save(espacio);
-                });
     }
 }

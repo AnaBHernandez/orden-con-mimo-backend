@@ -3,12 +3,13 @@ package com.ordenconmimo.espacio.controladores;
 import com.ordenconmimo.espacio.modelos.Espacio;
 import com.ordenconmimo.espacio.servicios.EspacioService;
 import com.ordenconmimo.usuario.modelos.Tarea;
+import com.ordenconmimo.usuario.modelos.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/espacios")
@@ -19,19 +20,21 @@ public class EspacioRestController {
 
     @GetMapping
     public ResponseEntity<List<Espacio>> obtenerTodosLosEspacios() {
-        return ResponseEntity.ok(espacioService.obtenerTodosLosEspacios());
+        List<Espacio> espacios = espacioService.obtenerTodosLosEspacios();
+        return ResponseEntity.ok(espacios);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Espacio> obtenerEspacioPorId(@PathVariable Long id) {
-        Optional<Espacio> espacio = espacioService.obtenerEspacioPorId(id);
-        return espacio.map(ResponseEntity::ok)
+        return espacioService.obtenerEspacioPorId(id)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Espacio> crearEspacio(@RequestBody Espacio espacio) {
-        return new ResponseEntity<>(espacioService.guardarEspacio(espacio), HttpStatus.CREATED);
+    public ResponseEntity<Espacio> guardarEspacio(@RequestBody Espacio espacio) {
+        Espacio espacioGuardado = espacioService.guardarEspacio(espacio);
+        return ResponseEntity.status(HttpStatus.CREATED).body(espacioGuardado);
     }
 
     @PutMapping("/{id}")
@@ -40,7 +43,8 @@ public class EspacioRestController {
             return ResponseEntity.notFound().build();
         }
         espacio.setId(id);
-        return ResponseEntity.ok(espacioService.guardarEspacio(espacio));
+        Espacio espacioActualizado = espacioService.guardarEspacio(espacio);
+        return ResponseEntity.ok(espacioActualizado);
     }
 
     @DeleteMapping("/{id}")
@@ -57,20 +61,47 @@ public class EspacioRestController {
         if (!espacioService.existeEspacio(id)) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(espacioService.obtenerTareasDeEspacio(id));
+        List<Tarea> tareas = espacioService.obtenerTareasDeEspacio(id);
+        return ResponseEntity.ok(tareas);
     }
 
     @PostMapping("/{id}/tareas")
-    public ResponseEntity<Espacio> agregarTareaAEspacio(@PathVariable Long id, @RequestBody Tarea tarea) {
-        Optional<Espacio> espacioActualizado = espacioService.agregarTareaAEspacio(id, tarea);
-        return espacioActualizado.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Tarea> agregarTareaAEspacio(@PathVariable Long id, @RequestBody Tarea tarea) {
+        if (!espacioService.existeEspacio(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        Tarea tareaAgregada = espacioService.agregarTareaAEspacio(id, tarea);
+        return ResponseEntity.status(HttpStatus.CREATED).body(tareaAgregada);
     }
-    
+
     @DeleteMapping("/{espacioId}/tareas/{tareaId}")
-    public ResponseEntity<Espacio> eliminarTareaDeEspacio(@PathVariable Long espacioId, @PathVariable Long tareaId) {
-        Optional<Espacio> espacioActualizado = espacioService.eliminarTareaDeEspacio(espacioId, tareaId);
-        return espacioActualizado.map(ResponseEntity::ok)
+    public ResponseEntity<Void> eliminarTareaDeEspacio(@PathVariable Long espacioId, @PathVariable Long tareaId) {
+        if (!espacioService.existeEspacio(espacioId)) {
+            return ResponseEntity.notFound().build();
+        }
+        espacioService.eliminarTareaDeEspacio(espacioId, tareaId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<Espacio>> obtenerEspaciosPorUsuario(@PathVariable Long usuarioId) {
+        List<Espacio> espacios = espacioService.obtenerEspaciosPorUsuario(usuarioId);
+        return ResponseEntity.ok(espacios);
+    }
+
+    @GetMapping("/count/usuario/{usuarioId}")
+    public ResponseEntity<Long> contarEspaciosPorUsuario(@PathVariable Long usuarioId) {
+        long count = espacioService.contarEspaciosPorUsuario(usuarioId);
+        return ResponseEntity.ok(count);
+    }
+
+    @PutMapping("/{id}/usuario")
+    public ResponseEntity<Espacio> asignarUsuarioAEspacio(@PathVariable Long id, @RequestBody Usuario usuario) {
+        return espacioService.obtenerEspacioPorId(id)
+                .map(espacio -> {
+                    espacio.setUsuario(usuario);
+                    return ResponseEntity.ok(espacioService.guardarEspacio(espacio));
+                })
                 .orElse(ResponseEntity.notFound().build());
     }
 }

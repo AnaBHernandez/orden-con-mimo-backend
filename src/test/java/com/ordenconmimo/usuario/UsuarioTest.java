@@ -38,7 +38,6 @@ void testEqualsHashCode() {
     Usuario usuario = new Usuario();
     usuario.setId(1L);
     
-a)
     assertEquals(usuario, usuario);
     
 

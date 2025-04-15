@@ -1,64 +1,60 @@
 package com.ordenconmimo.usuario.modelos;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.ordenconmimo.espacio.modelos.Espacio;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import com.ordenconmimo.usuario.modelos.Usuario;
+import com.ordenconmimo.espacio.modelos.Espacio;
 
 @Entity
 @Table(name = "tareas")
 public class Tarea {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     @Column(name = "titulo", nullable = false)
-    private String titulo;
-
+    private String nombre;
+    
     @Column(name = "descripcion")
     private String descripcion;
-
+    
     @Enumerated(EnumType.STRING)
     @Column(name = "categoria_mimo", nullable = false)
     private CategoriaMIMO categoria;
-
+    
     @Column(name = "completada", nullable = false)
     private boolean completada = false;
-
+    
     @Column(name = "fecha_creacion")
-    private LocalDateTime fechaCreacion = LocalDateTime.now();
-
-    @Column(name = "fecha_limite")
-    private java.time.LocalDate fechaLimite;
-
+    private LocalDateTime fechaCreacion;
+    
     @ManyToOne
     @JoinColumn(name = "usuario_id")
-    @JsonIgnoreProperties({ "tareas", "espacios" })
     private Usuario usuario;
-
+    
     @ManyToOne
     @JoinColumn(name = "espacio_id")
-    @JsonIgnoreProperties({ "tareas", "usuario" })
     private Espacio espacio;
-
+    
+    // Constructor vacío
     public Tarea() {
     }
-
-    public Tarea(String titulo, String descripcion, CategoriaMIMO categoria) {
-        this.titulo = titulo;
-        this.descripcion = descripcion;
-        this.categoria = categoria;
-        this.completada = false;
-        this.fechaCreacion = LocalDateTime.now();
-    }
-
+    
+    // Getters y setters
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getDescripcion() {
@@ -93,14 +89,6 @@ public class Tarea {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public java.time.LocalDate getFechaLimite() {
-        return fechaLimite;
-    }
-
-    public void setFechaLimite(java.time.LocalDate fechaLimite) {
-        this.fechaLimite = fechaLimite;
-    }
-
     public Usuario getUsuario() {
         return usuario;
     }
@@ -117,19 +105,8 @@ public class Tarea {
         this.espacio = espacio;
     }
 
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public String getNombre() {
-        return getTitulo();
-    }
-
-    public void setNombre(String nombre) {
-        setTitulo(nombre);
+    public void setTitulo(String string) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setTitulo'");
     }
 }

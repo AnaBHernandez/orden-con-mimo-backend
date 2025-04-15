@@ -146,13 +146,13 @@ class EspacioServiceTest {
         when(espacioRepository.findById(id)).thenReturn(Optional.of(espacioExistente));
         when(espacioRepository.save(any(Espacio.class))).thenAnswer(i -> i.getArguments()[0]);
         
-        Optional<Espacio> resultado = espacioService.actualizarEspacio(id, espacioNuevo);
+        Espacio resultado = espacioService.actualizarEspacio(id, espacioNuevo);
         
-        assertTrue(resultado.isPresent());
-        assertEquals(id, resultado.get().getId());
-        assertEquals("Cocina renovada", resultado.get().getNombre());
-        assertEquals("Espacio renovado", resultado.get().getDescripcion());
-        assertNotNull(resultado.get().getFechaCreacion());
+        assertNotNull(resultado);
+        assertEquals(id, resultado.getId());
+        assertEquals("Cocina renovada", resultado.getNombre());
+        assertEquals("Espacio renovado", resultado.getDescripcion());
+        assertNotNull(resultado.getFechaCreacion());
         verify(espacioRepository).findById(id);
         verify(espacioRepository).save(any(Espacio.class));
     }
@@ -191,12 +191,12 @@ class EspacioServiceTest {
     @Test
     void deberiaEncontrarEspacioPorNombre() {
         String nombre = "Cocina";
-        when(espacioRepository.findByNombre(nombre)).thenReturn(Optional.of(espacio1));
+        when(espacioRepository.findByNombre(nombre)).thenReturn(espacio1);
         
-        Optional<Espacio> resultado = espacioService.findByNombre(nombre);
+        Espacio resultado = espacioService.findByNombre(nombre);
         
-        assertTrue(resultado.isPresent());
-        assertEquals(nombre, resultado.get().getNombre());
+        assertNotNull(resultado);
+        assertEquals(nombre, resultado.getNombre());
         verify(espacioRepository).findByNombre(nombre);
     }
     
@@ -215,15 +215,14 @@ class EspacioServiceTest {
     @Test
     void noDeberiaAgregarTareaSiNoExisteEspacio() {
         Tarea nuevaTarea = new Tarea();
-        nuevaTarea.setNombre("Nueva tarea");  // Cambiado de setTitulo a setNombre
+        nuevaTarea.setNombre("Nueva tarea");
         
         when(espacioRepository.findById(99L)).thenReturn(Optional.empty());
         
-        Optional<Espacio> resultado = espacioService.agregarTareaAEspacio(99L, nuevaTarea);
+        Tarea resultado = espacioService.agregarTareaAEspacio(99L, nuevaTarea);
         
-        assertFalse(resultado.isPresent());
+        assertNull(resultado);
         verify(espacioRepository).findById(99L);
         verify(espacioRepository, never()).save(any());
     }
-    
 }

@@ -1,16 +1,16 @@
-// Archivo: src/main/java/com/ordenconmimo/usuario/controladores/TareaRestController.java
 package com.ordenconmimo.usuario.controladores;
 
-import java.util.List;
-
+import com.ordenconmimo.usuario.modelos.CategoriaMIMO;
+import com.ordenconmimo.usuario.modelos.Tarea;
+import com.ordenconmimo.usuario.servicios.TareaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.ordenconmimo.usuario.modelos.Tarea;
-import com.ordenconmimo.usuario.modelos.Usuario;
-import com.ordenconmimo.usuario.servicios.TareaService;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tareas")
@@ -20,31 +20,24 @@ public class TareaRestController {
     private TareaService tareaService;
 
     @GetMapping
-    public List<Tarea> getAllTareas() {
-        return tareaService.findAll(); 
+    public ResponseEntity<List<Tarea>> obtenerTodasLasTareas() {
+        return ResponseEntity.ok(tareaService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Tarea> getTareaById(@PathVariable Long id) {
-        return tareaService.findById(id) 
+    public ResponseEntity<Tarea> obtenerTareaPorId(@PathVariable Long id) {
+        return tareaService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Tarea> createTarea(@RequestBody Tarea tarea) {
-        if (tarea.getUsuario() == null) {
-            Usuario usuarioPredeterminado = new Usuario();
-            usuarioPredeterminado.setId(1L); 
-            tarea.setUsuario(usuarioPredeterminado);
-        }
-
-        Tarea nuevaTarea = tareaService.save(tarea);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevaTarea);
+    public ResponseEntity<Tarea> crearTarea(@RequestBody Tarea tarea) {
+        return new ResponseEntity<>(tareaService.save(tarea), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Tarea> updateTarea(@PathVariable Long id, @RequestBody Tarea tarea) {
+    public ResponseEntity<Tarea> actualizarTarea(@PathVariable Long id, @RequestBody Tarea tarea) {
         return tareaService.findById(id)
                 .map(tareaExistente -> {
                     tarea.setId(id);
@@ -54,11 +47,11 @@ public class TareaRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTarea(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminarTarea(@PathVariable Long id) {
         return tareaService.findById(id)
                 .map(tarea -> {
                     tareaService.deleteById(id);
-                    return ResponseEntity.noContent().<Void>build();
+                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -66,10 +59,46 @@ public class TareaRestController {
     @PutMapping("/{id}/toggle-completada")
     public ResponseEntity<Tarea> toggleCompletada(@PathVariable Long id) {
         return tareaService.findById(id)
-                .map(tarea -> {
-                    Tarea tareaActualizada = tareaService.toggleCompletada(id);
-                    return ResponseEntity.ok(tareaActualizada);
-                })
+                .map(tarea -> ResponseEntity.ok(tareaService.toggleCompletada(id)))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/categoria/{categoria}")
+    public ResponseEntity<List<Tarea>> obtenerTareasPorCategoria(@PathVariable CategoriaMIMO categoria) {
+        return ResponseEntity.ok(tareaService.findByCategoria(categoria));
+    }
+
+    @GetMapping("/completadas/{completada}")
+    public ResponseEntity<List<Tarea>> obtenerTareasPorEstadoCompletado(@PathVariable boolean completada) {
+        return ResponseEntity.ok(tareaService.findByCompletada(completada));
+    }
+
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<Tarea>> obtenerTareasPorUsuario(@PathVariable Long usuarioId) {
+        return ResponseEntity.ok(tareaService.findByUsuarioId(usuarioId));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Tarea> actualizarParcialmente(@PathVariable Long id, @RequestBody Map<String, Object> campos) {
+        try {
+            return ResponseEntity.ok(tareaService.actualizarParcialmente(id, campos));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<Tarea>> buscarPorTexto(@RequestParam String texto) {
+        return ResponseEntity.ok(tareaService.buscarPorTexto(texto));
+    }
+    
+    @GetMapping("/contar/categoria/{categoria}")
+    public ResponseEntity<Long> contarPorCategoria(@PathVariable CategoriaMIMO categoria) {
+        return ResponseEntity.ok(tareaService.contarPorCategoria(categoria));
+    }
+    
+    @PutMapping("/completar/categoria/{categoria}")
+    public ResponseEntity<Integer> marcarCompletadasPorCategoria(@PathVariable CategoriaMIMO categoria) {
+        return ResponseEntity.ok(tareaService.marcarCompletadasPorCategoria(categoria));
     }
 }

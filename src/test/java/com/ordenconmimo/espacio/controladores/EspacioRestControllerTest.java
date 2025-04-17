@@ -68,7 +68,7 @@ public class EspacioRestControllerTest {
     public void documentarComportamientoActualAlEliminar() throws Exception {
         mockMvc.perform(delete("/api/espacios/1")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound()); // Cambiado de isNoContent() a isNotFound()
+                .andExpect(status().isNotFound()); 
     }
 
     @Test

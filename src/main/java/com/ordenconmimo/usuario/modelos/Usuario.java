@@ -39,13 +39,11 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Espacio> espacios = new ArrayList<>();
     
-    // Constructor vacío
     public Usuario() {
         this.fechaCreacion = LocalDateTime.now();
         this.fechaActualizacion = LocalDateTime.now();
     }
     
-    // Constructor con campos básicos
     public Usuario(String nombre, String apellido, String username, String password, String string) {
         this();
         this.nombre = nombre;
@@ -54,7 +52,6 @@ public class Usuario {
         this.password = password;
     }    
 
-	// Getters y setters
     public Long getId() {
         return id;
     }
@@ -124,7 +121,6 @@ public class Usuario {
     }
 
     
-    // Métodos de conveniencia para la relación bidireccional
     public void addEspacio(Espacio espacio) {
         espacios.add(espacio);
         espacio.setUsuario(this);
@@ -136,7 +132,6 @@ public class Usuario {
     }
 
 	public void setEspacios(Set<Espacio> espacios2) {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'setEspacios'");
 	}
 }

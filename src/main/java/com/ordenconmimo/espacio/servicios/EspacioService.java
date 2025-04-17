@@ -82,7 +82,6 @@ public class EspacioService {
             Espacio espacio = espacioOpt.get();
             espacio.setNombre(espacioActualizado.getNombre());
             espacio.setDescripcion(espacioActualizado.getDescripcion());
-            // Mantener el usuario y las tareas
             return espacioRepository.save(espacio);
         }
         return null;

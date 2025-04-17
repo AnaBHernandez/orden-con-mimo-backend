@@ -32,19 +32,17 @@ public class Espacio {
     @OneToMany(mappedBy = "espacio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Tarea> tareas = new ArrayList<>();
     
-    // Constructor vacío
+    
     public Espacio() {
         this.fechaCreacion = LocalDateTime.now();
     }
     
-    // Constructor con nombre y descripción
     public Espacio(String nombre, String descripcion) {
         this();
         this.nombre = nombre;
         this.descripcion = descripcion;
     }
     
-    // Getters y setters
     public Long getId() {
         return id;
     }
@@ -93,7 +91,6 @@ public class Espacio {
         this.tareas = tareas;
     }
     
-    // Métodos de conveniencia para la relación bidireccional
     public void addTarea(Tarea tarea) {
         tareas.add(tarea);
         tarea.setEspacio(this);

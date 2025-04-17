@@ -42,7 +42,6 @@ class TareaRestControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(tareaRestController).build();
     }
 
-    // Método para evitar instanciar Tarea directamente
     private String createTareaJson(Long id, String nombre, String descripcion, 
                                 CategoriaMIMO categoria, boolean completada) throws Exception {
         Map<String, Object> tarea = new HashMap<>();
@@ -56,7 +55,6 @@ class TareaRestControllerTest {
 
     @Test
     void deberiaListarTodasLasTareas() throws Exception {
-        // Configuración para evitar usar Tarea directamente
         List<Map<String, Object>> tareas = new ArrayList<>();
         
         Map<String, Object> tarea1 = new HashMap<>();
@@ -76,7 +74,7 @@ class TareaRestControllerTest {
         tareas.add(tarea1);
         tareas.add(tarea2);
         
-        // Mock con una técnica diferente
+       
         doAnswer(inv -> tareas).when(tareaService).findAll();
 
         mockMvc.perform(get("/api/tareas"))
@@ -97,7 +95,7 @@ class TareaRestControllerTest {
 
     @Test
     void deberiaEncontrarTareaPorId() throws Exception {
-        // Preparar datos sin usar Tarea
+  
         Map<String, Object> tarea = new HashMap<>();
         tarea.put("id", 1L);
         tarea.put("nombre", "Limpiar cocina");
@@ -122,7 +120,6 @@ class TareaRestControllerTest {
 
     @Test
     void deberiaSalvarTarea() throws Exception {
-        // Preparar datos sin usar Tarea
         Map<String, Object> tareaGuardada = new HashMap<>();
         tareaGuardada.put("id", 1L);
         tareaGuardada.put("nombre", "Limpiar cocina");
@@ -142,7 +139,6 @@ class TareaRestControllerTest {
 
     @Test
     void deberiaActualizarTarea() throws Exception {
-        // Preparar datos sin usar Tarea
         Map<String, Object> tareaExistente = new HashMap<>();
         tareaExistente.put("id", 1L);
         tareaExistente.put("nombre", "Limpiar cocina");
@@ -180,7 +176,6 @@ class TareaRestControllerTest {
 
     @Test
     void deberiaEliminarTarea() throws Exception {
-        // Preparar datos sin usar Tarea
         Map<String, Object> tarea = new HashMap<>();
         tarea.put("id", 1L);
         tarea.put("nombre", "Tarea a eliminar");
@@ -202,7 +197,6 @@ class TareaRestControllerTest {
 
     @Test
     void deberiaToggleTareaCompletada() throws Exception {
-        // Preparar datos sin usar Tarea
         Map<String, Object> tareaOriginal = new HashMap<>();
         tareaOriginal.put("id", 1L);
         tareaOriginal.put("nombre", "Limpiar cocina");
@@ -231,7 +225,6 @@ class TareaRestControllerTest {
 
     @Test
     void deberiaEncontrarTareasPorCategoria() throws Exception {
-        // Preparar datos sin usar Tarea
         List<Map<String, Object>> tareas = new ArrayList<>();
         
         Map<String, Object> tarea1 = new HashMap<>();

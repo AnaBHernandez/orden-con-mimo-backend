@@ -40,7 +40,6 @@ class UsuarioTest {
         assertEquals("juanperez", usuario.getUsername());
         assertEquals("password", usuario.getPassword());
         
-        // Cambiar valores
         usuario.setId(2L);
         usuario.setNombre("Pedro");
         usuario.setApellido("González");
@@ -69,13 +68,10 @@ class UsuarioTest {
 
     @Test
     void testAddEspacio() {
-        // Verificar que inicialmente no hay espacios
         assertTrue(usuario.getEspacios().isEmpty());
         
-        // Añadir un espacio
         usuario.addEspacio(espacio);
         
-        // Verificar que el espacio fue añadido
         assertEquals(1, usuario.getEspacios().size());
         assertTrue(usuario.getEspacios().contains(espacio));
         assertEquals(usuario, espacio.getUsuario());
@@ -83,14 +79,11 @@ class UsuarioTest {
 
     @Test
     void testRemoveEspacio() {
-        // Añadir un espacio
         usuario.addEspacio(espacio);
         assertEquals(1, usuario.getEspacios().size());
         
-        // Eliminar el espacio
         usuario.removeEspacio(espacio);
         
-        // Verificar que el espacio fue eliminado
         assertTrue(usuario.getEspacios().isEmpty());
         assertNull(espacio.getUsuario());
     }
@@ -137,24 +130,18 @@ class UsuarioTest {
         Usuario usuario5 = new Usuario();
         usuario5.setId(null);
         
-        // Reflexividad
         assertEquals(usuario, usuario);
         
-        // Simetría
         assertEquals(usuario, usuario2);
         assertEquals(usuario2, usuario);
         
-        // Transitividad
         assertNotEquals(usuario, usuario3);
         assertNotEquals(usuario2, usuario3);
         
-        // Consistencia con null
         assertNotEquals(null, usuario);
         
-        // Ids nulos
         assertEquals(usuario4, usuario5);
         
-        // Diferentes tipos
         assertNotEquals(usuario, "String");
     }
 
@@ -169,13 +156,10 @@ class UsuarioTest {
         Usuario usuario4 = new Usuario();
         usuario4.setId(null);
         
-        // Mismo ID debe dar mismo hashCode
         assertEquals(usuario.hashCode(), usuario2.hashCode());
         
-        // Diferente ID debe dar diferente hashCode
         assertNotEquals(usuario.hashCode(), usuario3.hashCode());
         
-        // ID nulo debe dar un valor específico
         assertEquals(0, usuario4.hashCode());
     }
 }

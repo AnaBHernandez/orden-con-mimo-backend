@@ -60,7 +60,6 @@ public class TareaControllerTest {
         when(usuarioService.findAll()).thenReturn(usuarios);
         when(tareaService.findByUsuarioId(1L)).thenReturn(tareas);
 
-        // When & Then
         mockMvc.perform(get("/tareas"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("tareas"))
@@ -76,7 +75,7 @@ public class TareaControllerTest {
 
     @Test
     public void deberiaListarTodasLasTareasCuandoNoExistenUsuarios() throws Exception {
-        // Given
+     
         List<Usuario> usuarios = new ArrayList<>();
         
         Tarea tarea1 = new Tarea();
@@ -92,7 +91,6 @@ public class TareaControllerTest {
         when(usuarioService.findAll()).thenReturn(usuarios);
         when(tareaService.findAll()).thenReturn(tareas);
 
-        // When & Then
         mockMvc.perform(get("/tareas"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("tareas"))
@@ -106,7 +104,7 @@ public class TareaControllerTest {
 
     @Test
     public void deberiaFuncionarConListaVaciaDeTareas() throws Exception {
-        // Given
+     
         Usuario usuario = new Usuario();
         usuario.setId(1L);
         usuario.setNombre("Usuario Test");
@@ -119,7 +117,7 @@ public class TareaControllerTest {
         when(usuarioService.findAll()).thenReturn(usuarios);
         when(tareaService.findByUsuarioId(1L)).thenReturn(tareas);
 
-        // When & Then
+
         mockMvc.perform(get("/tareas"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("tareas"))

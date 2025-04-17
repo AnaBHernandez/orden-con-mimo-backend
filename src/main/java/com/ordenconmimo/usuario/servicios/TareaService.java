@@ -111,10 +111,7 @@ public class TareaService {
         Optional<Tarea> tareaOpt = tareaRepository.findById(tareaId);
         if (tareaOpt.isPresent()) {
             Tarea tarea = tareaOpt.get();
-            // Este método asume que la asignación al espacio se hace en otro servicio
-            // o que el espacio ya se ha obtenido y pasado a la tarea.
-            // Aquí solo actualizamos el ID del espacio
-            // Normalmente sería mejor tener una referencia al EspacioService aquí.
+            
             return tareaRepository.save(tarea);
         }
         throw new RuntimeException("Tarea no encontrada con id: " + tareaId);

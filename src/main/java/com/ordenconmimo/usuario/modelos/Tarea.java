@@ -36,11 +36,9 @@ public class Tarea {
     @JoinColumn(name = "espacio_id")
     private Espacio espacio;
     
-    // Constructor vacío
     public Tarea() {
     }
     
-    // Getters y setters
     public Long getId() {
         return id;
     }
@@ -105,8 +103,11 @@ public class Tarea {
         this.espacio = espacio;
     }
 
-    public void setTitulo(String string) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setTitulo'");
+    public void setTitulo(String titulo) {
+        this.nombre = titulo; // Asigna al campo nombre
+    }
+    
+    public String getTitulo() {
+        return this.nombre; // Retorna el valor del campo nombre
     }
 }

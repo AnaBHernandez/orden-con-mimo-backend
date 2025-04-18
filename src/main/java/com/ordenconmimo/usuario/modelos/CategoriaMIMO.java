@@ -22,4 +22,3 @@ package com.ordenconmimo.usuario.modelos;
         }
     }
     
-

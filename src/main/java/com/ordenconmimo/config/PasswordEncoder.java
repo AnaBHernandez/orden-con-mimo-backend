@@ -7,7 +7,6 @@ import java.util.Base64;
 public class PasswordEncoder {
     
     public String encode(String rawPassword) {
-        // Usando Base64 para simular algún tipo de encriptación (no seguro para producción)
         return Base64.getEncoder().encodeToString(rawPassword.getBytes());
     }
     

@@ -1,6 +1,7 @@
 package com.ordenconmimo.usuario.modelos;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import com.ordenconmimo.espacio.modelos.Espacio;
 
@@ -27,6 +28,9 @@ public class Tarea {
     
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
+    
+    @Column(name = "fecha_limite")
+    private LocalDate fechaLimite;
     
     @ManyToOne
     @JoinColumn(name = "usuario_id")
@@ -87,6 +91,14 @@ public class Tarea {
         this.fechaCreacion = fechaCreacion;
     }
 
+    public LocalDate getFechaLimite() {
+        return fechaLimite;
+    }
+
+    public void setFechaLimite(LocalDate fechaLimite) {
+        this.fechaLimite = fechaLimite;
+    }
+
     public Usuario getUsuario() {
         return usuario;
     }
@@ -104,10 +116,10 @@ public class Tarea {
     }
 
     public void setTitulo(String titulo) {
-        this.nombre = titulo; // Asigna al campo nombre
+        this.nombre = titulo; 
     }
     
     public String getTitulo() {
-        return this.nombre; // Retorna el valor del campo nombre
+        return this.nombre; 
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -37,14 +38,55 @@ public class TareaRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Tarea> actualizarTarea(@PathVariable Long id, @RequestBody Tarea tarea) {
-        return tareaService.findById(id)
-                .map(tareaExistente -> {
-                    tarea.setId(id);
-                    return ResponseEntity.ok(tareaService.save(tarea));
-                })
-                .orElse(ResponseEntity.notFound().build());
+public ResponseEntity<Tarea> actualizarTarea(@PathVariable Long id, @RequestBody Map<String, Object> tareaData) {
+    try {
+        Optional<Tarea> tareaOpt = tareaService.findById(id);
+        if (tareaOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        Tarea tarea = tareaOpt.get();
+        
+        if (tareaData.containsKey("nombre")) {
+            tarea.setNombre((String) tareaData.get("nombre"));
+        }
+        
+        if (tareaData.containsKey("descripcion")) {
+            tarea.setDescripcion((String) tareaData.get("descripcion"));
+        }
+        
+        if (tareaData.containsKey("categoria")) {
+            tarea.setCategoria(CategoriaMIMO.valueOf((String) tareaData.get("categoria")));
+        }
+        
+        if (tareaData.containsKey("completada")) {
+            tarea.setCompletada((Boolean) tareaData.get("completada"));
+        }
+        
+        if (tareaData.containsKey("fechaLimite")) {
+            if (tareaData.get("fechaLimite") != null && !tareaData.get("fechaLimite").toString().isEmpty()) {
+                String fechaStr = tareaData.get("fechaLimite").toString();
+                try {
+                    LocalDate fecha = LocalDate.parse(fechaStr);
+                    tarea.setFechaLimite(fecha);
+                    System.out.println("Fecha límite actualizada: " + fecha);
+                } catch (Exception e) {
+                    System.err.println("Error al parsear fecha límite: " + fechaStr);
+                    e.printStackTrace();
+                }
+            } else {
+                tarea.setFechaLimite(null);
+            }
+        }
+        
+        Tarea tareaActualizada = tareaService.save(tarea);
+        return ResponseEntity.ok(tareaActualizada);
+    } catch (Exception e) {
+        System.err.println("Error al actualizar tarea: " + e.getMessage());
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+}
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarTarea(@PathVariable Long id) {
@@ -79,7 +121,8 @@ public class TareaRestController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Tarea> actualizarParcialmente(@PathVariable Long id, @RequestBody Map<String, Object> campos) {
+    public ResponseEntity<Tarea> actualizarParcialmente(@PathVariable Long id,
+            @RequestBody Map<String, Object> campos) {
         try {
             return ResponseEntity.ok(tareaService.actualizarParcialmente(id, campos));
         } catch (RuntimeException e) {
@@ -91,12 +134,12 @@ public class TareaRestController {
     public ResponseEntity<List<Tarea>> buscarPorTexto(@RequestParam String texto) {
         return ResponseEntity.ok(tareaService.buscarPorTexto(texto));
     }
-    
+
     @GetMapping("/contar/categoria/{categoria}")
     public ResponseEntity<Long> contarPorCategoria(@PathVariable CategoriaMIMO categoria) {
         return ResponseEntity.ok(tareaService.contarPorCategoria(categoria));
     }
-    
+
     @PutMapping("/completar/categoria/{categoria}")
     public ResponseEntity<Integer> marcarCompletadasPorCategoria(@PathVariable CategoriaMIMO categoria) {
         return ResponseEntity.ok(tareaService.marcarCompletadasPorCategoria(categoria));

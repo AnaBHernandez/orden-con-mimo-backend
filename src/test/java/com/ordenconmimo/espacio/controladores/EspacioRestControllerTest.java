@@ -33,7 +33,7 @@ public class EspacioRestControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    
     private EspacioService espacioService;
 
     @Autowired

@@ -126,4 +126,18 @@ public class TareaService {
     public List<Tarea> findPendientesByCategoria(CategoriaMIMO categoria) {
         return tareaRepository.findByCategoriaAndCompletada(categoria, false);
     }
+
+    public Optional<Tarea> obtenerTareaPorId(Long id) {
+        if (id == null) {
+            return Optional.empty();
+        }
+        return tareaRepository.findById(id);
+    }
+
+    public Tarea guardarTarea(Tarea tarea) {
+        if (tarea.getFechaCreacion() == null) {
+            tarea.setFechaCreacion(LocalDateTime.now());
+        }
+        return tareaRepository.save(tarea);
+    }
 }

@@ -4,11 +4,11 @@ import com.ordenconmimo.espacio.modelos.Espacio;
 import com.ordenconmimo.espacio.repositorios.EspacioRepository;
 import com.ordenconmimo.usuario.modelos.Tarea;
 import com.ordenconmimo.usuario.modelos.Usuario;
+import com.ordenconmimo.usuario.repositorios.TareaRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,81 +17,80 @@ public class EspacioService {
 
     @Autowired
     private EspacioRepository espacioRepository;
-
+    
+    @Autowired
+    private TareaRepository tareaRepository;
+    
     public List<Espacio> obtenerTodosLosEspacios() {
         return espacioRepository.findAll();
     }
-
+    
     public Optional<Espacio> obtenerEspacioPorId(Long id) {
         return espacioRepository.findById(id);
     }
-
-    @Transactional
+    
+    public List<Espacio> obtenerEspaciosPorUsuario(Usuario usuario) {
+        return espacioRepository.findByUsuario(usuario);
+    }
+    
+    public List<Espacio> obtenerEspaciosPorUsuarioId(Long usuarioId) {
+        return espacioRepository.findByUsuarioId(usuarioId);
+    }
+    
     public Espacio guardarEspacio(Espacio espacio) {
-        if (espacio.getFechaCreacion() == null) {
-            espacio.setFechaCreacion(LocalDateTime.now());
-        }
         return espacioRepository.save(espacio);
     }
-
-    @Transactional
+    
     public void eliminarEspacio(Long id) {
         espacioRepository.deleteById(id);
     }
-
+    
     public boolean existeEspacio(Long id) {
         return espacioRepository.existsById(id);
     }
-
-    public List<Tarea> obtenerTareasDeEspacio(Long id) {
-        Optional<Espacio> espacioOpt = espacioRepository.findById(id);
-        return espacioOpt.map(Espacio::getTareas).orElse(null);
+    
+    public long contarEspaciosPorUsuarioId(Long usuarioId) {
+        return espacioRepository.countByUsuarioId(usuarioId);
     }
-
-    @Transactional
-    public Tarea agregarTareaAEspacio(Long espacioId, Tarea tarea) {
-        Optional<Espacio> espacioOpt = espacioRepository.findById(espacioId);
-        if (espacioOpt.isPresent()) {
-            Espacio espacio = espacioOpt.get();
-            tarea.setEspacio(espacio);
-            espacio.getTareas().add(tarea);
-            espacioRepository.save(espacio);
-            return tarea;
-        }
-        return null;
+    
+    public long contarEspaciosPorUsuario(Long usuarioId) {
+        return espacioRepository.countByUsuarioId(usuarioId);
     }
-
-    @Transactional
-    public void eliminarTareaDeEspacio(Long espacioId, Long tareaId) {
-        Optional<Espacio> espacioOpt = espacioRepository.findById(espacioId);
-        if (espacioOpt.isPresent()) {
-            Espacio espacio = espacioOpt.get();
-            espacio.getTareas().removeIf(tarea -> tarea.getId().equals(tareaId));
-            espacioRepository.save(espacio);
+    
+    public Espacio buscarEspacioPorNombre(String nombre) {
+        return espacioRepository.findByNombre(nombre);
+    }
+    
+    public Espacio findByNombre(String nombre) {
+        return espacioRepository.findByNombre(nombre);
+    }
+    
+    public Espacio actualizarEspacio(Long id, Espacio espacio) {
+        if (!existeEspacio(id)) {
+            return null;
         }
+        
+        espacio.setId(id);
+        return guardarEspacio(espacio);
+    }
+    
+    public List<Tarea> obtenerTareasDeEspacio(long espacioId) {
+        return tareaRepository.findByEspacioId(espacioId);
+    }
+    
+    public Tarea agregarTareaAEspacio(long espacioId, Tarea tarea) {
+        Optional<Espacio> espacioOpt = espacioRepository.findById(espacioId);
+        if (espacioOpt.isEmpty()) {
+            return null;
+        }
+        
+        Espacio espacio = espacioOpt.get();
+        tarea.setEspacio(espacio);
+        
+        return tareaRepository.save(tarea);
     }
 
     public List<Espacio> obtenerEspaciosPorUsuario(Long usuarioId) {
         return espacioRepository.findByUsuarioId(usuarioId);
-    }
-
-    @Transactional
-    public Espacio actualizarEspacio(Long id, Espacio espacioActualizado) {
-        Optional<Espacio> espacioOpt = espacioRepository.findById(id);
-        if (espacioOpt.isPresent()) {
-            Espacio espacio = espacioOpt.get();
-            espacio.setNombre(espacioActualizado.getNombre());
-            espacio.setDescripcion(espacioActualizado.getDescripcion());
-            return espacioRepository.save(espacio);
-        }
-        return null;
-    }
-
-    public long contarEspaciosPorUsuario(Long usuarioId) {
-        return espacioRepository.countByUsuarioId(usuarioId);
-    }
-
-    public Espacio findByNombre(String nombre) {
-        return espacioRepository.findByNombre(nombre);
     }
 }

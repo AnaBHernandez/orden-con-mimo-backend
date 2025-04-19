@@ -33,7 +33,7 @@ public class EspacioRestControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    
+    @MockBean  // Añadir esta anotación
     private EspacioService espacioService;
 
     @Autowired
@@ -94,5 +94,4 @@ public class EspacioRestControllerTest {
                 .content("{}"))
                 .andExpect(status().isCreated());
     }   
-
 }

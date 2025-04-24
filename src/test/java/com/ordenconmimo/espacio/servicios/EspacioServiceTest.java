@@ -173,7 +173,7 @@ class EspacioServiceTest {
         List<Tarea> resultado = espacioService.obtenerTareasDeEspacio(99L);
 
         assertTrue(resultado.isEmpty());
-        verify(espacioRepository).findById(99L);
+        verify(espacioRepository).existsById(99L);
     }
 
     @Test

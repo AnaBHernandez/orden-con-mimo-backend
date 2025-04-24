@@ -2,7 +2,7 @@ package com.ordenconmimo.usuario.controladores;
 
 import com.ordenconmimo.usuario.modelos.CategoriaMIMO;
 import com.ordenconmimo.usuario.modelos.Tarea;
-import com.ordenconmimo.usuario.servicios.TareaService;
+import com.ordenconmimo.usuario.servicios.tareaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import java.util.Optional;
 public class TareaRestController {
 
     @Autowired
-    private TareaService tareaService;
+    private tareaServiceImpl tareaService;
 
     @GetMapping
     public ResponseEntity<List<Tarea>> obtenerTodasLasTareas() {

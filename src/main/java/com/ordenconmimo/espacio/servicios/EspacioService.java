@@ -1,25 +1,26 @@
 package com.ordenconmimo.espacio.servicios;
-
 import com.ordenconmimo.espacio.modelos.Espacio;
 import com.ordenconmimo.espacio.repositorios.EspacioRepository;
 import com.ordenconmimo.usuario.modelos.Tarea;
 import com.ordenconmimo.usuario.modelos.Usuario;
 import com.ordenconmimo.usuario.repositorios.TareaRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class EspacioService {
 
-    @Autowired
-    private EspacioRepository espacioRepository;
+    private final EspacioRepository espacioRepository;
+    private final TareaRepository tareaRepository;
     
     @Autowired
-    private TareaRepository tareaRepository;
+    public EspacioService(EspacioRepository espacioRepository, TareaRepository tareaRepository) {
+        this.espacioRepository = espacioRepository;
+        this.tareaRepository = tareaRepository;
+    }
     
     public List<Espacio> obtenerTodosLosEspacios() {
         return espacioRepository.findAll();
@@ -42,7 +43,9 @@ public class EspacioService {
     }
     
     public void eliminarEspacio(Long id) {
-        espacioRepository.deleteById(id);
+        if (existeEspacio(id)) {
+            espacioRepository.deleteById(id);
+        }
     }
     
     public boolean existeEspacio(Long id) {
@@ -75,6 +78,9 @@ public class EspacioService {
     }
     
     public List<Tarea> obtenerTareasDeEspacio(long espacioId) {
+        if (!espacioRepository.existsById(espacioId)) {
+            return Collections.emptyList();
+        }
         return tareaRepository.findByEspacioId(espacioId);
     }
     

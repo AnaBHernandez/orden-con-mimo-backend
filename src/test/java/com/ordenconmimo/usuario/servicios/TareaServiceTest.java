@@ -30,7 +30,7 @@ class TareaServiceTest {
     private TareaRepository tareaRepository;
 
     @InjectMocks
-    private TareaService tareaService;
+    private tareaServiceImpl tareaService;
 
     @Test
     void deberiaEncontrarTodasLasTareas() {
@@ -203,7 +203,7 @@ void testActualizarTareaCompleto() {
     tareaExistente.setFechaLimite(null);
     
     // Mock para el servicio
-    TareaService servicioMock = Mockito.mock(TareaService.class);
+    tareaServiceImpl servicioMock = Mockito.mock(tareaServiceImpl.class);
     
     // Configuramos el controlador con el mock
     TareaRestController controlador = new TareaRestController();
@@ -259,7 +259,7 @@ void testActualizarTareaEliminarFechaLimite() {
     tareaExistente.setFechaLimite(LocalDate.parse("2025-05-15"));
     
     // Mock para el servicio
-    TareaService servicioMock = Mockito.mock(TareaService.class);
+    tareaServiceImpl servicioMock = Mockito.mock(tareaServiceImpl.class);
     
     // Configuramos el controlador con el mock
     TareaRestController controlador = new TareaRestController();
@@ -310,7 +310,7 @@ void testErrorParseandoFechaLimite() {
     tareaExistente.setNombre("Tarea original");
     
     // Mock para el servicio
-    TareaService servicioMock = Mockito.mock(TareaService.class);
+    tareaServiceImpl servicioMock = Mockito.mock(tareaServiceImpl.class);
     
     // Configuramos el controlador con el mock
     TareaRestController controlador = new TareaRestController();
@@ -337,7 +337,7 @@ void testErrorParseandoFechaLimite() {
 @Test
 void testTareaNoEncontrada() {
     // Mock para el servicio
-    TareaService servicioMock = Mockito.mock(TareaService.class);
+    tareaServiceImpl servicioMock = Mockito.mock(tareaServiceImpl.class);
     
     // Configuramos el controlador con el mock
     TareaRestController controlador = new TareaRestController();
@@ -364,7 +364,7 @@ void testTareaNoEncontrada() {
 @Test
 void testErrorEnServicio() {
     // Mock para el servicio
-    TareaService servicioMock = Mockito.mock(TareaService.class);
+    tareaServiceImpl servicioMock = Mockito.mock(tareaServiceImpl.class);
     
     // Configuramos el controlador con el mock
     TareaRestController controlador = new TareaRestController();

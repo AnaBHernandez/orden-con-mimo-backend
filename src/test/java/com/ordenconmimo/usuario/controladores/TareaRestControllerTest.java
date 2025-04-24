@@ -3,7 +3,7 @@ package com.ordenconmimo.usuario.controladores;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ordenconmimo.usuario.modelos.CategoriaMIMO;
 import com.ordenconmimo.usuario.modelos.Tarea;
-import com.ordenconmimo.usuario.servicios.TareaService;
+import com.ordenconmimo.usuario.servicios.tareaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class TareaRestControllerTest {
 
     @Mock
-    private TareaService tareaService;
+    private tareaServiceImpl tareaService;
 
     @InjectMocks
     private TareaRestController tareaRestController;

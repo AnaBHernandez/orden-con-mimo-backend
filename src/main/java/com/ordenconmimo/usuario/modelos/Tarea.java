@@ -1,36 +1,35 @@
 package com.ordenconmimo.usuario.modelos;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 import com.ordenconmimo.espacio.modelos.Espacio;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
 @Entity
-@Table(name = "tareas")
 public class Tarea {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "titulo", nullable = false)
     private String nombre;
-    
-    @Column(name = "descripcion")
     private String descripcion;
     
     @Enumerated(EnumType.STRING)
-    @Column(name = "categoria_mimo", nullable = false)
     private CategoriaMIMO categoria;
     
-    @Column(name = "completada", nullable = false)
-    private boolean completada = false;
-    
-    @Column(name = "fecha_creacion")
-    private LocalDateTime fechaCreacion;
-    
-    @Column(name = "fecha_limite")
+    private boolean completada;
     private LocalDate fechaLimite;
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
     
     @ManyToOne
     @JoinColumn(name = "usuario_id")
@@ -39,10 +38,10 @@ public class Tarea {
     @ManyToOne
     @JoinColumn(name = "espacio_id")
     private Espacio espacio;
-    
+
     public Tarea() {
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -83,20 +82,20 @@ public class Tarea {
         this.completada = completada;
     }
 
-    public LocalDateTime getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
     public LocalDate getFechaLimite() {
         return fechaLimite;
     }
 
     public void setFechaLimite(LocalDate fechaLimite) {
         this.fechaLimite = fechaLimite;
+    }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
     }
 
     public Usuario getUsuario() {
@@ -114,12 +113,8 @@ public class Tarea {
     public void setEspacio(Espacio espacio) {
         this.espacio = espacio;
     }
-
-    public void setTitulo(String titulo) {
-        this.nombre = titulo; 
-    }
     
     public String getTitulo() {
-        return this.nombre; 
+        return nombre;
     }
 }

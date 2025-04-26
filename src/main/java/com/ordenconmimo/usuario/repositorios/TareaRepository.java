@@ -1,14 +1,12 @@
 package com.ordenconmimo.usuario.repositorios;
 
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import com.ordenconmimo.usuario.modelos.CategoriaMIMO;
 import com.ordenconmimo.usuario.modelos.Tarea;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Repository
 public interface TareaRepository extends JpaRepository<Tarea, Long> {
@@ -19,14 +17,11 @@ public interface TareaRepository extends JpaRepository<Tarea, Long> {
     
     List<Tarea> findByUsuarioId(Long usuarioId);
     
-    List<Tarea> findByNombreContainingIgnoreCaseOrDescripcionContainingIgnoreCase(String nombre, String descripcion);
+    List<Tarea> findByNombreContainingOrDescripcionContaining(String nombre, String descripcion);
     
-    long countByCategoria(CategoriaMIMO categoria);
+    Long countByCategoria(CategoriaMIMO categoria);
     
-    @Modifying
-    @Transactional
-    @Query("UPDATE Tarea t SET t.completada = ?1 WHERE t.categoria = ?2")
-    int updateCompletadaByCategoria(boolean completada, CategoriaMIMO categoria);
-
-    List<Tarea> findByEspacioId(long espacioId);
+    List<Tarea> findByCategoriaAndCompletada(CategoriaMIMO categoria, boolean completada);
+    
+    List<Tarea> findByEspacioId(Long espacioId);
 }

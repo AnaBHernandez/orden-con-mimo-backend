@@ -1,14 +1,15 @@
 package com.ordenconmimo.espacio.servicios;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
 import com.ordenconmimo.espacio.modelos.Espacio;
 import com.ordenconmimo.espacio.repositorios.EspacioRepository;
 import com.ordenconmimo.usuario.modelos.Tarea;
 import com.ordenconmimo.usuario.modelos.Usuario;
 import com.ordenconmimo.usuario.repositorios.TareaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EspacioService {
@@ -16,7 +17,6 @@ public class EspacioService {
     private final EspacioRepository espacioRepository;
     private final TareaRepository tareaRepository;
     
-    @Autowired
     public EspacioService(EspacioRepository espacioRepository, TareaRepository tareaRepository) {
         this.espacioRepository = espacioRepository;
         this.tareaRepository = tareaRepository;

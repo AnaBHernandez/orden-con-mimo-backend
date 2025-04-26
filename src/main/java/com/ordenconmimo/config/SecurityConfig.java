@@ -12,20 +12,27 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // Agregar este bean
     @Bean(name = "mvcHandlerMappingIntrospector")
     public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
         return new HandlerMappingIntrospector();
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
-            .csrf(csrf -> csrf.disable())
-            .headers(headers -> headers.frameOptions().disable())
-            .cors(Customizer.withDefaults());
-        
+                .csrf(csrf -> csrf.disable())
+                
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .anyRequest().permitAll()
+                )
+                
+                .headers(headers -> {
+                    headers.frameOptions(frameOptions -> frameOptions.disable());
+                })
+                
+                .cors(Customizer.withDefaults());
+
         return http.build();
     }
 }

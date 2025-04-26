@@ -44,13 +44,14 @@ public class Usuario {
         this.fechaActualizacion = LocalDateTime.now();
     }
     
-    public Usuario(String nombre, String apellido, String username, String password, String string) {
+    public Usuario(String nombre, String apellido, String email, String username, String password) {
         this();
         this.nombre = nombre;
         this.apellido = apellido;
+        this.email = email;
         this.username = username;
         this.password = password;
-    }    
+    }
 
     public Long getId() {
         return id;

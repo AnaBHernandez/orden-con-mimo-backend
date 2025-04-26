@@ -19,7 +19,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ordenconmimo.espacio.controladores.EspacioRestController;
 import com.ordenconmimo.espacio.modelos.Espacio;
 import com.ordenconmimo.espacio.servicios.EspacioService;
@@ -34,8 +33,6 @@ public class EspacioRespositorioTest {
     @MockBean
     private EspacioService espacioService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
 
     private Espacio espacio1;
     private Espacio espacio2;

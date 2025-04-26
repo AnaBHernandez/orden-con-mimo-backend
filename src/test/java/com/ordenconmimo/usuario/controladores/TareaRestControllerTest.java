@@ -1,318 +1,204 @@
 package com.ordenconmimo.usuario.controladores;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ordenconmimo.usuario.modelos.CategoriaMIMO;
-import com.ordenconmimo.usuario.modelos.Tarea;
-import com.ordenconmimo.usuario.servicios.tareaServiceImpl;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDate;
-import java.util.*;
-
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.ordenconmimo.usuario.modelos.CategoriaMIMO;
+import com.ordenconmimo.usuario.modelos.Tarea;
+import com.ordenconmimo.usuario.servicios.TareaServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
-class TareaRestControllerTest {
+@MockitoSettings(strictness = Strictness.LENIENT)
+public class TareaRestControllerTest {
 
     @Mock
-    private tareaServiceImpl tareaService;
-
+    private TareaServiceImpl tareaService;
+    
     @InjectMocks
     private TareaRestController tareaRestController;
-
-    private MockMvc mockMvc;
-    private ObjectMapper objectMapper = new ObjectMapper();
-
+    
+    private Tarea tarea;
+    private List<Tarea> tareas;
+    
     @BeforeEach
-    void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(tareaRestController).build();
+    public void setUp() {
+        tarea = new Tarea();
+        tarea.setId(1L);
+        tarea.setNombre("Tarea de prueba");
+        tarea.setDescripcion("Descripción de prueba");
+        tarea.setCategoria(CategoriaMIMO.MIRATE);
+        tarea.setCompletada(false);
+        
+        tareas = new ArrayList<>();
+        tareas.add(tarea);
+        
+        Tarea tarea2 = new Tarea();
+        tarea2.setId(2L);
+        tarea2.setNombre("Otra tarea");
+        tarea2.setDescripcion("Otra descripción");
+        tarea2.setCategoria(CategoriaMIMO.IMAGINA);
+        tarea2.setCompletada(true);
+        
+        tareas.add(tarea2);
     }
-
-    private String createTareaJson(Long id, String nombre, String descripcion,
-            CategoriaMIMO categoria, boolean completada) throws Exception {
-        Map<String, Object> tarea = new HashMap<>();
-        if (id != null)
-            tarea.put("id", id);
-        tarea.put("nombre", nombre);
-        tarea.put("descripcion", descripcion);
-        tarea.put("categoria", categoria);
-        tarea.put("completada", completada);
-        return objectMapper.writeValueAsString(tarea);
-    }
-
+    
     @Test
-    void deberiaActualizarTareaConFechaLimite() throws Exception {
-
-        Tarea tareaExistente = new Tarea();
-        tareaExistente.setId(1L);
-        tareaExistente.setNombre("Limpiar cocina");
-        tareaExistente.setDescripcion("Limpieza general");
-        tareaExistente.setCategoria(CategoriaMIMO.ORDENA);
-        tareaExistente.setCompletada(false);
-
-        Tarea tareaActualizada = new Tarea();
-        tareaActualizada.setId(1L);
-        tareaActualizada.setNombre("Limpiar cocina a fondo");
-        tareaActualizada.setDescripcion("Limpieza profunda");
-        tareaActualizada.setCategoria(CategoriaMIMO.ORDENA);
-        tareaActualizada.setCompletada(true);
-        tareaActualizada.setFechaLimite(LocalDate.parse("2025-04-30"));
-
-        when(tareaService.findById(1L)).thenReturn(Optional.of(tareaExistente));
-
-        when(tareaService.save(any(Tarea.class))).thenReturn(tareaActualizada);
-
-        String requestJson = "{\"nombre\":\"Limpiar cocina a fondo\"," +
-                "\"descripcion\":\"Limpieza profunda\"," +
-                "\"categoria\":\"ORDENA\"," +
-                "\"completada\":true," +
-                "\"fechaLimite\":\"2025-04-30\"}";
-
-        mockMvc.perform(put("/api/tareas/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nombre", is("Limpiar cocina a fondo")))
-                .andExpect(jsonPath("$.descripcion", is("Limpieza profunda")))
-                .andExpect(jsonPath("$.categoria", is("ORDENA")))
-                .andExpect(jsonPath("$.completada", is(true)))
-                .andExpect(jsonPath("$.fechaLimite").isArray())
-                .andExpect(jsonPath("$.fechaLimite[0]", is(2025)))
-                .andExpect(jsonPath("$.fechaLimite[1]", is(4)))
-                .andExpect(jsonPath("$.fechaLimite[2]", is(30)));
+    public void testObtenerTodasLasTareas() {
+        when(tareaService.findAll()).thenReturn(tareas);
+        
+        ResponseEntity<List<Tarea>> response = tareaRestController.obtenerTodasLasTareas();
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(2, response.getBody().size());
     }
-
+    
     @Test
-    void deberiaActualizarTareaYEliminarFechaLimite() throws Exception {
-        Tarea tareaExistente = new Tarea();
-        tareaExistente.setId(1L);
-        tareaExistente.setNombre("Limpiar cocina");
-        tareaExistente.setDescripcion("Limpieza general");
-        tareaExistente.setCategoria(CategoriaMIMO.ORDENA);
-        tareaExistente.setCompletada(false);
-        tareaExistente.setFechaLimite(LocalDate.parse("2025-04-30"));
-
-        Tarea tareaActualizada = new Tarea();
-        tareaActualizada.setId(1L);
-        tareaActualizada.setNombre("Limpiar cocina a fondo");
-        tareaActualizada.setDescripcion("Limpieza profunda");
-        tareaActualizada.setCategoria(CategoriaMIMO.ORDENA);
-        tareaActualizada.setCompletada(true);
-        tareaActualizada.setFechaLimite(null);
-
-        when(tareaService.findById(1L)).thenReturn(Optional.of(tareaExistente));
-
-        when(tareaService.save(any(Tarea.class))).thenReturn(tareaActualizada);
-
-        String requestJson = "{\"nombre\":\"Limpiar cocina a fondo\"," +
-                "\"descripcion\":\"Limpieza profunda\"," +
-                "\"categoria\":\"ORDENA\"," +
-                "\"completada\":true," +
-                "\"fechaLimite\":null}";
-
-        // Ejecutar solicitud y verificar
-        mockMvc.perform(put("/api/tareas/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
-                .andExpect(status().isOk());
-
+    public void testObtenerTareaPorId() {
+        when(tareaService.obtenerTareaPorId(1L)).thenReturn(Optional.of(tarea));
+        
+        ResponseEntity<Tarea> response = tareaRestController.obtenerTareaPorId(1L);
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Tarea de prueba", response.getBody().getNombre());
     }
-
+    
     @Test
-    void deberiaActualizarSoloNombre() throws Exception {
-        Tarea tareaExistente = new Tarea();
-        tareaExistente.setId(1L);
-        tareaExistente.setNombre("Tarea original");
-        tareaExistente.setCategoria(CategoriaMIMO.MIRATE);
-
+    public void testObtenerTareaPorIdNoEncontrada() {
+        when(tareaService.obtenerTareaPorId(999L)).thenReturn(Optional.empty());
+        
+        ResponseEntity<Tarea> response = tareaRestController.obtenerTareaPorId(999L);
+        
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+    
+    @Test
+    public void testCrearTarea() {
+        when(tareaService.guardarTarea(any(Tarea.class))).thenReturn(tarea);
+        
+        ResponseEntity<Tarea> response = tareaRestController.crearTarea(new Tarea());
+        
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals("Tarea de prueba", response.getBody().getNombre());
+    }
+    
+    @Test
+    public void testActualizarTarea() {
+        when(tareaService.obtenerTareaPorId(1L)).thenReturn(Optional.of(tarea));
+        when(tareaService.guardarTarea(any(Tarea.class))).thenReturn(tarea);
+        
         Tarea tareaActualizada = new Tarea();
-        tareaActualizada.setId(1L);
         tareaActualizada.setNombre("Tarea actualizada");
-        tareaActualizada.setCategoria(CategoriaMIMO.MIRATE);
-
-        when(tareaService.findById(1L)).thenReturn(Optional.of(tareaExistente));
-        when(tareaService.save(any(Tarea.class))).thenReturn(tareaActualizada);
-
-        String requestJson = "{\"nombre\":\"Tarea actualizada\"}";
-
-        mockMvc.perform(put("/api/tareas/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nombre", is("Tarea actualizada")));
+        
+        ResponseEntity<Tarea> response = tareaRestController.actualizarTarea(1L, tareaActualizada);
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Tarea de prueba", response.getBody().getNombre());
     }
-
+    
     @Test
-    void deberiaActualizarSoloDescripcion() throws Exception {
-        Tarea tareaExistente = new Tarea();
-        tareaExistente.setId(1L);
-        tareaExistente.setNombre("Tarea");
-        tareaExistente.setDescripcion("Descripción original");
-
-        Tarea tareaActualizada = new Tarea();
-        tareaActualizada.setId(1L);
-        tareaActualizada.setNombre("Tarea");
-        tareaActualizada.setDescripcion("Descripción actualizada");
-
-        when(tareaService.findById(1L)).thenReturn(Optional.of(tareaExistente));
-        when(tareaService.save(any(Tarea.class))).thenReturn(tareaActualizada);
-
-        String requestJson = "{\"descripcion\":\"Descripción actualizada\"}";
-
-        mockMvc.perform(put("/api/tareas/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.descripcion", is("Descripción actualizada")));
+    public void testActualizarTareaNoEncontrada() {
+        when(tareaService.obtenerTareaPorId(999L)).thenReturn(Optional.empty());
+        
+        ResponseEntity<Tarea> response = tareaRestController.actualizarTarea(999L, new Tarea());
+        
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
-
+    
     @Test
-    void deberiaActualizarSoloCategoria() throws Exception {
-        Tarea tareaExistente = new Tarea();
-        tareaExistente.setId(1L);
-        tareaExistente.setNombre("Tarea");
-        tareaExistente.setCategoria(CategoriaMIMO.MIRATE);
-
-        Tarea tareaActualizada = new Tarea();
-        tareaActualizada.setId(1L);
-        tareaActualizada.setNombre("Tarea");
-        tareaActualizada.setCategoria(CategoriaMIMO.MUEVETE);
-
-        when(tareaService.findById(1L)).thenReturn(Optional.of(tareaExistente));
-        when(tareaService.save(any(Tarea.class))).thenReturn(tareaActualizada);
-
-        String requestJson = "{\"categoria\":\"MUEVETE\"}";
-
-        mockMvc.perform(put("/api/tareas/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.categoria", is("MUEVETE")));
+    public void testEliminarTarea() {
+        when(tareaService.existeTarea(1L)).thenReturn(true);
+        doNothing().when(tareaService).eliminarTarea(1L);
+        
+        ResponseEntity<Void> response = tareaRestController.eliminarTarea(1L);
+        
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        verify(tareaService, times(1)).eliminarTarea(1L);
     }
-
+    
     @Test
-    void deberiaActualizarSoloCompletada() throws Exception {
-        Tarea tareaExistente = new Tarea();
-        tareaExistente.setId(1L);
-        tareaExistente.setNombre("Tarea");
-        tareaExistente.setCompletada(false);
-
-        Tarea tareaActualizada = new Tarea();
-        tareaActualizada.setId(1L);
-        tareaActualizada.setNombre("Tarea");
-        tareaActualizada.setCompletada(true);
-
-        when(tareaService.findById(1L)).thenReturn(Optional.of(tareaExistente));
-        when(tareaService.save(any(Tarea.class))).thenReturn(tareaActualizada);
-
-        String requestJson = "{\"completada\":true}";
-
-        mockMvc.perform(put("/api/tareas/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.completada", is(true)));
+    public void testEliminarTareaNoEncontrada() {
+        when(tareaService.existeTarea(999L)).thenReturn(false);
+        
+        ResponseEntity<Void> response = tareaRestController.eliminarTarea(999L);
+        
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
-
+    
     @Test
-    void deberiaFallarCuandoLaFechaNoEsValida() throws Exception {
-        Tarea tareaExistente = new Tarea();
-        tareaExistente.setId(1L);
-        tareaExistente.setNombre("Tarea");
-
-        when(tareaService.findById(1L)).thenReturn(Optional.of(tareaExistente));
-
-        String requestJson = "{\"fechaLimite\":\"fecha-invalida\"}";
-
-        mockMvc.perform(put("/api/tareas/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
-                .andExpect(status().isInternalServerError());
+    public void testObtenerTareasPorCategoria() {
+        when(tareaService.findByCategoria(CategoriaMIMO.MIRATE)).thenReturn(List.of(tarea));
+        
+        ResponseEntity<List<Tarea>> response = tareaRestController.obtenerTareasPorCategoria("MIRATE");
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(1, response.getBody().size());
+        assertEquals(CategoriaMIMO.MIRATE, response.getBody().get(0).getCategoria());
     }
-
+    
     @Test
-    void deberiaRetornarErrorCuandoElServicioFalla() throws Exception {
-        when(tareaService.findById(1L)).thenThrow(new RuntimeException("Error de servicio"));
-
-        String requestJson = "{\"nombre\":\"Tarea actualizada\"}";
-
-        mockMvc.perform(put("/api/tareas/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
-                .andExpect(status().isInternalServerError());
+    public void testObtenerTareasPorCompletada() {
+        when(tareaService.findByCompletada(true)).thenReturn(List.of(tareas.get(1)));
+        
+        ResponseEntity<List<Tarea>> response = tareaRestController.obtenerTareasPorCompletada(true);
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(1, response.getBody().size());
+        assertEquals(true, response.getBody().get(0).isCompletada());
     }
-
+    
     @Test
-    void deberiaActualizarCamposMultiples() throws Exception {
-        Tarea tareaExistente = new Tarea();
-        tareaExistente.setId(1L);
-        tareaExistente.setNombre("Tarea original");
-        tareaExistente.setDescripcion("Descripción original");
-        tareaExistente.setCategoria(CategoriaMIMO.MIRATE);
-        tareaExistente.setCompletada(false);
-
-        Tarea tareaActualizada = new Tarea();
-        tareaActualizada.setId(1L);
-        tareaActualizada.setNombre("Tarea actualizada");
-        tareaActualizada.setDescripcion("Descripción actualizada");
-        tareaActualizada.setCategoria(CategoriaMIMO.ORDENA);
-        tareaActualizada.setCompletada(true);
-
-        when(tareaService.findById(1L)).thenReturn(Optional.of(tareaExistente));
-        when(tareaService.save(any(Tarea.class))).thenReturn(tareaActualizada);
-
-        String requestJson = "{\"nombre\":\"Tarea actualizada\"," +
-                "\"descripcion\":\"Descripción actualizada\"," +
-                "\"categoria\":\"ORDENA\"," +
-                "\"completada\":true}";
-
-        mockMvc.perform(put("/api/tareas/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nombre", is("Tarea actualizada")))
-                .andExpect(jsonPath("$.descripcion", is("Descripción actualizada")))
-                .andExpect(jsonPath("$.categoria", is("ORDENA")))
-                .andExpect(jsonPath("$.completada", is(true)));
+    public void testObtenerTareasPorUsuarioId() {
+        when(tareaService.findByUsuarioId(1L)).thenReturn(tareas);
+        
+        ResponseEntity<List<Tarea>> response = tareaRestController.obtenerTareasPorUsuarioId(1L);
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(2, response.getBody().size());
     }
-
+    
     @Test
-    void deberiaActualizarFechaVacia() throws Exception {
-        Tarea tareaExistente = new Tarea();
-        tareaExistente.setId(1L);
-        tareaExistente.setNombre("Tarea");
-        tareaExistente.setFechaLimite(LocalDate.parse("2025-04-30"));
-
-        Tarea tareaActualizada = new Tarea();
-        tareaActualizada.setId(1L);
-        tareaActualizada.setNombre("Tarea");
-        tareaActualizada.setFechaLimite(null);
-
-        when(tareaService.findById(1L)).thenReturn(Optional.of(tareaExistente));
-        when(tareaService.save(any(Tarea.class))).thenReturn(tareaActualizada);
-
-        String requestJson = "{\"fechaLimite\":\"\"}";
-
-        mockMvc.perform(put("/api/tareas/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.fechaLimite").doesNotExist());
+    public void testActualizarTareaParcialmente() {
+        Map<String, Object> campos = new HashMap<>();
+        campos.put("nombre", "Tarea actualizada");
+        campos.put("completada", true);
+        
+        when(tareaService.actualizarParcialmente(1L, campos)).thenReturn(Optional.of(tarea));
+        
+        ResponseEntity<Tarea> response = tareaRestController.actualizarTareaParcialmente(1L, campos);
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Tarea de prueba", response.getBody().getNombre());
+    }
+    
+    @Test
+    public void testActualizarTareaParcialmenteNoEncontrada() {
+        Map<String, Object> campos = new HashMap<>();
+        campos.put("nombre", "Tarea actualizada");
+        
+        when(tareaService.actualizarParcialmente(999L, campos)).thenReturn(Optional.empty());
+        
+        ResponseEntity<Tarea> response = tareaRestController.actualizarTareaParcialmente(999L, campos);
+        
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 }

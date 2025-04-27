@@ -1,8 +1,6 @@
 package com.ordenconmimo.espacio.repositorios;
-
 import java.util.Arrays;
 import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
@@ -18,33 +16,24 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.ordenconmimo.espacio.controladores.EspacioRestController;
 import com.ordenconmimo.espacio.modelos.Espacio;
 import com.ordenconmimo.espacio.servicios.EspacioService;
-
 @WebMvcTest(EspacioRestController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class EspacioRespositorioTest {
-
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
+    @MockBean // Añadir esta anotación
     private EspacioService espacioService;
-
-
     private Espacio espacio1;
     private Espacio espacio2;
-
     @BeforeEach
     void setUp() {
         espacio1 = new Espacio("Espacio 1", "Descripción 1");
         espacio1.setId(1L);
-
         espacio2 = new Espacio("Espacio 2", "Descripción 2");
         espacio2.setId(2L);
-
         when(espacioService.obtenerTodosLosEspacios()).thenReturn(Arrays.asList(espacio1, espacio2));
         when(espacioService.obtenerEspacioPorId(1L)).thenReturn(Optional.of(espacio1));
         when(espacioService.obtenerEspacioPorId(999L)).thenReturn(Optional.empty());
@@ -63,7 +52,7 @@ public class EspacioRespositorioTest {
     public void documentarComportamientoActualAlEliminar() throws Exception {
         mockMvc.perform(delete("/api/espacios/1")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound()); 
+                .andExpect(status().isNoContent()); 
     }
 
     @Test

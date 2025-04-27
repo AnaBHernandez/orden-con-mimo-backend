@@ -1,20 +1,23 @@
 package com.ordenconmimo.espacio.controladores;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -25,17 +28,14 @@ import com.ordenconmimo.espacio.modelos.Espacio;
 import com.ordenconmimo.espacio.servicios.EspacioService;
 import com.ordenconmimo.usuario.modelos.Tarea;
 import com.ordenconmimo.usuario.modelos.Usuario;
-import com.ordenconmimo.usuario.servicios.TareaService;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
+@SuppressWarnings({"NullableProblems", "ConstantConditions"})
 public class EspacioRestControllerTest {
 
     @Mock
     private EspacioService espacioService;
-
-    @Mock
-    private TareaService tareaService;
 
     @InjectMocks
     private EspacioRestController espacioRestController;
@@ -79,7 +79,11 @@ public class EspacioRestControllerTest {
         ResponseEntity<List<Espacio>> response = espacioRestController.obtenerTodosLosEspacios();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(2, response.getBody().size());
+
+        List<Espacio> espaciosRespuesta = response.getBody();
+        assertNotNull(espaciosRespuesta, "La respuesta no debería tener cuerpo null");
+        assertEquals(2, espaciosRespuesta.size());
+
         verify(espacioService, times(1)).obtenerTodosLosEspacios();
     }
 
@@ -90,6 +94,7 @@ public class EspacioRestControllerTest {
         ResponseEntity<Espacio> response = espacioRestController.obtenerEspacioPorId(1L);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody(), "El cuerpo de la respuesta no debe ser null");
         assertEquals("Espacio de prueba", response.getBody().getNombre());
         verify(espacioService, times(1)).obtenerEspacioPorId(1L);
     }
@@ -112,6 +117,7 @@ public class EspacioRestControllerTest {
         ResponseEntity<Espacio> response = espacioRestController.crearEspacio(nuevoEspacio);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getBody(), "El cuerpo de la respuesta no debe ser null");
         assertEquals("Espacio de prueba", response.getBody().getNombre());
         verify(espacioService, times(1)).guardarEspacio(any(Espacio.class));
     }
@@ -165,7 +171,7 @@ public class EspacioRestControllerTest {
         verify(espacioService, times(1)).existeEspacio(99L);
         verify(espacioService, never()).eliminarEspacio(99L);
     }
-      
+
     @Test
     public void testObtenerEspaciosPorUsuarioId() {
         when(espacioService.obtenerEspaciosPorUsuarioId(1L)).thenReturn(espacios);
@@ -179,36 +185,46 @@ public class EspacioRestControllerTest {
 
     @Test
     public void testObtenerTareasDeEspacio() {
-        List<Tarea> tareas = new ArrayList<>();
-        tareas.add(new Tarea());
-        when(espacioService.obtenerTareasDeEspacio(1L)).thenReturn(tareas);
+        List<Tarea> tareasLocales = new ArrayList<>();  // Cambiado "tareas" a "tareasLocales"
+        tareasLocales.add(new Tarea());
+        when(espacioService.obtenerTareasDeEspacio(1L)).thenReturn(tareasLocales);
 
         ResponseEntity<List<Tarea>> response = espacioRestController.obtenerTareasDeEspacio(1L);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(1, response.getBody().size());
+
+        List<Tarea> tareasRespuesta = response.getBody();
+
+        assertNotNull(tareasRespuesta, "El cuerpo de la respuesta no debería ser null");
+
+        assertEquals(1, tareasRespuesta.size());
+
         verify(espacioService, times(1)).obtenerTareasDeEspacio(1L);
     }
 
     @Test
     public void testAgregarTareaAEspacioExistente() {
-        Tarea tarea = new Tarea();
-        tarea.setNombre("Nueva Tarea");
-        when(espacioService.agregarTareaAEspacio(eq(1L), any(Tarea.class))).thenReturn(tarea);
+        Tarea tareaLocal = new Tarea();  // Renombrada
+        tareaLocal.setNombre("Nueva Tarea");
+        when(espacioService.agregarTareaAEspacio(eq(1L), any(Tarea.class))).thenReturn(tareaLocal);
 
-        ResponseEntity<Tarea> response = espacioRestController.agregarTareaAEspacio(1L, tarea);
+        ResponseEntity<Tarea> response = espacioRestController.agregarTareaAEspacio(1L, tareaLocal);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals("Nueva Tarea", response.getBody().getNombre());
+
+        Tarea tareaRespuesta = response.getBody();
+        assertNotNull(tareaRespuesta, "El cuerpo de la respuesta no debería ser null");
+        assertEquals("Nueva Tarea", tareaRespuesta.getNombre());
+
         verify(espacioService, times(1)).agregarTareaAEspacio(eq(1L), any(Tarea.class));
     }
 
     @Test
     public void testAgregarTareaAEspacioNoExistente() {
-        Tarea tarea = new Tarea();
+        Tarea tareaLocal = new Tarea();  // Renombrada
         when(espacioService.agregarTareaAEspacio(eq(99L), any(Tarea.class))).thenReturn(null);
 
-        ResponseEntity<Tarea> response = espacioRestController.agregarTareaAEspacio(99L, tarea);
+        ResponseEntity<Tarea> response = espacioRestController.agregarTareaAEspacio(99L, tareaLocal);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         verify(espacioService, times(1)).agregarTareaAEspacio(eq(99L), any(Tarea.class));

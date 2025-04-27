@@ -1,14 +1,14 @@
 package com.ordenconmimo.usuario.servicios;
 
-import com.ordenconmimo.usuario.modelos.Usuario;
-import com.ordenconmimo.usuario.repositorios.UsuarioRepository;
-import com.ordenconmimo.config.PasswordEncoder;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import com.ordenconmimo.config.PasswordEncoder;
+import com.ordenconmimo.usuario.modelos.Usuario;
+import com.ordenconmimo.usuario.repositorios.UsuarioRepository;
 
 @Service
 public class UsuarioService {

@@ -35,7 +35,7 @@ mvn clean install
 mvn spring-boot:run
 
 5. La API estará disponible en:
-http://localhost:8080/api
+http://localhost:8082/api
 ```
 📊 Estructura del Proyecto
 src/
@@ -80,18 +80,39 @@ GET /api/espacios/{id}/tareas: Listar tareas de un espacio
 mvn test
 
 ```
-📚 Documentación
+## 📚 Documentación Completa
 
-Para más detalles sobre el proyecto, consulta la **Wiki oficial**:
+### 🔗 **Wiki Oficial del Proyecto**
+Para documentación detallada, arquitectura del sistema, guías técnicas y seguimiento del desarrollo:
 
-🔗 **[Wiki del Proyecto](https://github.com/AnaBHernandez/orden-con-mimo-backend/wiki)**
+**[📖 Wiki del Proyecto](https://github.com/AnaBHernandez/orden-con-mimo-backend/wiki)**
 
-La Wiki incluye:
-- 🏗️ Arquitectura del sistema Backend
-- 📖 Documentación completa de la API REST
-- 🔄 Diario de desarrollo y seguimiento de cambios
-- 🛠️ Guías técnicas y mejores prácticas
-- 📝 Registro de problemas y soluciones
+### 📋 **Contenido de la Wiki:**
+- 🏗️ **Arquitectura del sistema Backend** - Diseño y estructura del proyecto
+- 📖 **Documentación completa de la API REST** - Endpoints detallados con ejemplos
+- 🔄 **Diario de desarrollo** - Seguimiento de cambios y mejoras
+- 🛠️ **Guías técnicas** - Mejores prácticas y configuración
+- 📝 **Registro de problemas y soluciones** - Troubleshooting y fixes
+- 🎯 **Método MIMO Backend** - Implementación técnica del método MIMO
+
+### 🚀 **Acceso Rápido:**
+- **Base de datos H2**: `http://localhost:8082/h2-console/`
+- **API REST**: `http://localhost:8082/api/`
+- **Documentación**: [Wiki del Proyecto](https://github.com/AnaBHernandez/orden-con-mimo-backend/wiki)
+
+### 🗄️ **Base de Datos H2 (Desarrollo)**
+Para acceder a la consola de la base de datos:
+1. Ve a: `http://localhost:8082/h2-console/`
+2. Configuración:
+   - **JDBC URL**: `jdbc:h2:mem:testdb`
+   - **User Name**: `sa`
+   - **Password**: `password`
+3. Click en "Connect"
+
+**Tablas disponibles:**
+- `ESPACIO` - Gestión de espacios
+- `TAREA` - Tareas con categorías MIMO
+- `USUARIOS` - Usuarios del sistema
 ```
 📝 Licencia
 Este proyecto está licenciado bajo la Licencia MIT - ver el archivo LICENSE para más detalles.

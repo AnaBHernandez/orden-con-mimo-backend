@@ -85,7 +85,9 @@ mvn test
 ### 🔗 **Wiki Oficial del Proyecto**
 Para documentación detallada, arquitectura del sistema, guías técnicas y seguimiento del desarrollo:
 
-**[📖 Wiki del Proyecto](https://github.com/AnaBHernandez/orden-con-mimo-backend/wiki)**
+## 📖 **[Wiki del Proyecto](https://github.com/AnaBHernandez/orden-con-mimo-backend/wiki)** 📖
+
+> **¡Haz click aquí para acceder a la documentación completa!**
 
 ### 📋 **Contenido de la Wiki:**
 - 🏗️ **Arquitectura del sistema Backend** - Diseño y estructura del proyecto
@@ -98,7 +100,7 @@ Para documentación detallada, arquitectura del sistema, guías técnicas y segu
 ### 🚀 **Acceso Rápido:**
 - **Base de datos H2**: `http://localhost:8082/h2-console/`
 - **API REST**: `http://localhost:8082/api/`
-- **Documentación**: [Wiki del Proyecto](https://github.com/AnaBHernandez/orden-con-mimo-backend/wiki)
+- **📖 Documentación Wiki**: [**Wiki del Proyecto**](https://github.com/AnaBHernandez/orden-con-mimo-backend/wiki)
 
 ### 🗄️ **Base de Datos H2 (Desarrollo)**
 Para acceder a la consola de la base de datos:

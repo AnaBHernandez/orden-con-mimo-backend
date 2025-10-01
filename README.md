@@ -81,7 +81,7 @@ mvn test
 
 ```
 ## 📚 Documentación
-Para más información sobre el proyecto, consulta la [Wiki oficial del repositorio](https://github.com/AnaBHernandez/orden-con-mimo-backend/wiki).
+Para más información sobre el proyecto, consulta la Wiki oficial del repositorio.
 
 ### 🚀 **Acceso Rápido:**
 - **Base de datos H2**: `http://localhost:8082/h2-console/`

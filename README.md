@@ -81,10 +81,17 @@ mvn test
 
 ```
 📚 Documentación
-Para más detalles sobre el proyecto, consulta:
-Wiki de arquitectura
-Guía de desarrollo
-Documentación de API (disponible al ejecutar la aplicación)
+
+Para más detalles sobre el proyecto, consulta la **Wiki oficial**:
+
+🔗 **[Wiki del Proyecto](https://github.com/AnaBHernandez/orden-con-mimo-backend/wiki)**
+
+La Wiki incluye:
+- 🏗️ Arquitectura del sistema Backend
+- 📖 Documentación completa de la API REST
+- 🔄 Diario de desarrollo y seguimiento de cambios
+- 🛠️ Guías técnicas y mejores prácticas
+- 📝 Registro de problemas y soluciones
 ```
 📝 Licencia
 Este proyecto está licenciado bajo la Licencia MIT - ver el archivo LICENSE para más detalles.

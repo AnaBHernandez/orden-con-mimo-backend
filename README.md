@@ -80,27 +80,12 @@ GET /api/espacios/{id}/tareas: Listar tareas de un espacio
 mvn test
 
 ```
-## 📚 Documentación Completa
-
-### 🔗 **Wiki Oficial del Proyecto**
-Para documentación detallada, arquitectura del sistema, guías técnicas y seguimiento del desarrollo:
-
-## 📖 **[Wiki del Proyecto](https://github.com/AnaBHernandez/orden-con-mimo-backend/wiki)** 📖
-
-> **¡Haz click aquí para acceder a la documentación completa!**
-
-### 📋 **Contenido de la Wiki:**
-- 🏗️ **Arquitectura del sistema Backend** - Diseño y estructura del proyecto
-- 📖 **Documentación completa de la API REST** - Endpoints detallados con ejemplos
-- 🔄 **Diario de desarrollo** - Seguimiento de cambios y mejoras
-- 🛠️ **Guías técnicas** - Mejores prácticas y configuración
-- 📝 **Registro de problemas y soluciones** - Troubleshooting y fixes
-- 🎯 **Método MIMO Backend** - Implementación técnica del método MIMO
+## 📚 Documentación
+Para más información sobre el proyecto, consulta la [Wiki oficial del repositorio](https://github.com/AnaBHernandez/orden-con-mimo-backend/wiki).
 
 ### 🚀 **Acceso Rápido:**
 - **Base de datos H2**: `http://localhost:8082/h2-console/`
 - **API REST**: `http://localhost:8082/api/`
-- **📖 Documentación Wiki**: [**Wiki del Proyecto**](https://github.com/AnaBHernandez/orden-con-mimo-backend/wiki)
 
 ### 🗄️ **Base de Datos H2 (Desarrollo)**
 Para acceder a la consola de la base de datos:

@@ -1,3 +1,4 @@
+
 # 🏰 Orden con MIMO - Backend
 
 ## 📋 Descripción
@@ -132,7 +133,7 @@ mvn clean test jacoco:report
 ```
 
 ## 📚 Documentación
-Para más información sobre el proyecto, consulta la Wiki oficial del repositorio.
+Para más información sobre el proyecto, consulta la [Wiki oficial del repositorio](https://github.com/AnaBHernandez/orden-con-mimo-backend/wiki).
 
 ## 🤝 Contribución
 1. Haz fork del proyecto

@@ -10,40 +10,40 @@ import java.util.Set;
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
-    
+
     @Column(name = "apellido", nullable = false, length = 100)
     private String apellido;
-    
+
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-    
+
     @Column(name = "username", nullable = false, unique = true, length = 100)
     private String username;
-    
+
     @Column(name = "password", nullable = false)
     private String password;
-    
+
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
-    
+
     @Column(name = "fecha_actualizacion")
     private LocalDateTime fechaActualizacion;
-    
+
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Espacio> espacios = new ArrayList<>();
-    
+
     public Usuario() {
         this.fechaCreacion = LocalDateTime.now();
         this.fechaActualizacion = LocalDateTime.now();
     }
-    
+
     public Usuario(String nombre, String apellido, String email, String username, String password) {
         this();
         this.nombre = nombre;
@@ -67,6 +67,7 @@ public class Usuario {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+        this.fechaActualizacion = LocalDateTime.now();
     }
 
     public String getApellido() {
@@ -121,18 +122,45 @@ public class Usuario {
         return espacios;
     }
 
-    
     public void addEspacio(Espacio espacio) {
         espacios.add(espacio);
         espacio.setUsuario(this);
     }
-    
+
     public void removeEspacio(Espacio espacio) {
         espacios.remove(espacio);
         espacio.setUsuario(null);
     }
 
-	public void setEspacios(Set<Espacio> espacios2) {
-		throw new UnsupportedOperationException("Unimplemented method 'setEspacios'");
-	}
+    public void setEspacios(Set<Espacio> espacios2) {
+        throw new UnsupportedOperationException("Unimplemented method 'setEspacios'");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Usuario usuario = (Usuario) o;
+        return java.util.Objects.equals(id, usuario.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", fechaCreacion=" + fechaCreacion +
+                ", fechaActualizacion=" + fechaActualizacion +
+                '}';
+    }
 }
